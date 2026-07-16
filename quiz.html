@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入試化学 頻出テーマ完成講座 理論編 ― 確認クイズ（全6日）</title>
+<style>
+  :root{
+    --bg:#f4f6fa; --card:#ffffff; --ink:#1e2a3a; --sub:#5a6b80;
+    --accent:#2563eb; --accent-soft:#e8eefc;
+    --ok:#16a34a; --ok-soft:#e9f9ef;
+    --ng:#dc2626; --ng-soft:#fdeaea;
+    --border:#dde4ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;padding-bottom:60px;}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:26px 16px 20px;text-align:center;}
+  header h1{font-size:1.25rem;letter-spacing:.05em;}
+  header p{font-size:.85rem;opacity:.85;margin-top:4px;}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:14px 10px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border);}
+  .tab{border:1px solid var(--border);background:var(--card);color:var(--sub);border-radius:20px;padding:6px 14px;font-size:.85rem;cursor:pointer;transition:.15s;}
+  .tab:hover{border-color:var(--accent);color:var(--accent);}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:bold;}
+  .tab .badge{margin-left:5px;font-size:.75rem;}
+  main{max-width:760px;margin:0 auto;padding:18px 14px;}
+  .day-title{font-size:1.05rem;font-weight:bold;margin:10px 2px 4px;}
+  .day-note{font-size:.82rem;color:var(--sub);margin:0 2px 14px;}
+  .qcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 16px 12px;margin-bottom:14px;box-shadow:0 1px 3px rgba(30,42,58,.05);}
+  .qhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;}
+  .qnum{font-weight:bold;color:var(--accent);font-size:.9rem;white-space:nowrap;}
+  .qsrc{font-size:.72rem;color:var(--sub);text-align:right;}
+  .qtext{font-size:.95rem;margin-bottom:10px;}
+  .choices{display:flex;flex-direction:column;gap:7px;}
+  .choice{display:flex;align-items:flex-start;gap:9px;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;cursor:pointer;font-size:.9rem;transition:.12s;background:#fff;}
+  .choice:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .choice input{margin-top:5px;accent-color:var(--accent);flex-shrink:0;}
+  .choice.selected{border-color:var(--accent);background:var(--accent-soft);}
+  .graded .choice{cursor:default;pointer-events:none;}
+  .choice.correct{border-color:var(--ok);background:var(--ok-soft);}
+  .choice.wrong{border-color:var(--ng);background:var(--ng-soft);}
+  .mark{font-size:.8rem;font-weight:bold;margin-top:6px;}
+  .mark.ok{color:var(--ok);} .mark.ng{color:var(--ng);}
+  .exp{margin-top:9px;background:#f8fafc;border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:9px 12px;font-size:.85rem;color:#334155;display:none;}
+  .graded .exp{display:block;}
+  .exp b{color:var(--ink);}
+  .actions{text-align:center;margin:22px 0 10px;}
+  .btn{border:none;border-radius:26px;padding:12px 38px;font-size:1rem;font-weight:bold;cursor:pointer;transition:.15s;}
+  .btn-grade{background:var(--accent);color:#fff;box-shadow:0 3px 10px rgba(37,99,235,.3);}
+  .btn-grade:hover{background:#1d4ed8;}
+  .btn-grade:disabled{background:#9db4dd;cursor:not-allowed;box-shadow:none;}
+  .btn-reset{background:#fff;color:var(--sub);border:1px solid var(--border);margin-left:10px;padding:12px 24px;}
+  .btn-reset:hover{color:var(--accent);border-color:var(--accent);}
+  .result{display:none;background:var(--card);border:2px solid var(--accent);border-radius:14px;padding:18px;text-align:center;margin-bottom:18px;}
+  .result.show{display:block;}
+  .result .score{font-size:2rem;font-weight:bold;color:var(--accent);}
+  .result .msg{font-size:.9rem;color:var(--sub);margin-top:4px;}
+  .progress{font-size:.8rem;color:var(--sub);text-align:center;margin-bottom:10px;}
+  sub,sup{line-height:0;}
+  @media(max-width:480px){ header h1{font-size:1.05rem;} .qtext{font-size:.92rem;} }
+</style>
+</head>
+<body>
+<header>
+  <h1>入試化学 頻出テーマ完成講座 理論編</h1>
+  <p>確認クイズ 全6日・60問（4択）｜ 解答後に「採点する」で解説を表示</p>
+</header>
+
+<div class="tabs" id="tabs"></div>
+<main id="main"></main>
+
+<script>
+// ===== 問題データ =====
+// a: choices の正解インデックス（choices は表示時にシャッフル）
+const DAYS = [
+{
+title:"第1日　反応速度",
+note:"平均速度・速度式の決定・半減期・触媒と活性化エネルギー",
+qs:[
+{q:"過酸化水素の分解 2H<sub>2</sub>O<sub>2</sub> → 2H<sub>2</sub>O + O<sub>2</sub> で、[H<sub>2</sub>O<sub>2</sub>] が 100 秒間で 0.80 mol/L から 0.40 mol/L に減少した。この間の過酸化水素の平均の分解速度は？",
+ src:"例題1 問2（岡山大 2026 改）",
+ choices:["4.0×10<sup>−3</sup> mol/(L・s)","8.0×10<sup>−3</sup> mol/(L・s)","2.0×10<sup>−3</sup> mol/(L・s)","4.0×10<sup>−2</sup> mol/(L・s)"],a:0,
+ exp:"v = −Δ[H<sub>2</sub>O<sub>2</sub>]/Δt = (0.80−0.40)/100 = <b>4.0×10<sup>−3</sup> mol/(L・s)</b>。"},
+{q:"上の反応で v = k[H<sub>2</sub>O<sub>2</sub>] が成り立つ。反応開始から 100 秒までの平均の分解速度 4.0×10<sup>−3</sup> mol/(L・s) と、その間の濃度の平均値を用いると、速度定数 k は？",
+ src:"例題1 問4（岡山大 2026 改）",
+ choices:["6.7×10<sup>−3</sup> /s","5.0×10<sup>−3</sup> /s","1.0×10<sup>−2</sup> /s","6.7×10<sup>−2</sup> /s"],a:0,
+ exp:"平均濃度 = (0.80+0.40)/2 = 0.60 mol/L。k = 4.0×10<sup>−3</sup>/0.60 ≒ <b>6.7×10<sup>−3</sup> /s</b>。"},
+{q:"この分解反応では 100 秒ごとに濃度が半分になっていた（半減期 100 秒）。反応開始時 0.80 mol/L のとき、400 秒後の [H<sub>2</sub>O<sub>2</sub>] は？",
+ src:"例題1 問5（岡山大 2026 改）",
+ choices:["0.050 mol/L","0.10 mol/L","0.025 mol/L","0.20 mol/L"],a:0,
+ exp:"400 秒 = 半減期4回分。0.80 → 0.40 → 0.20 → 0.10 → <b>0.050 mol/L</b>。"},
+{q:"0.80 mol/L の過酸化水素水 500 mL 中の H<sub>2</sub>O<sub>2</sub> がすべて分解したとき、標準状態で発生する酸素の体積は？（2H<sub>2</sub>O<sub>2</sub> → 2H<sub>2</sub>O + O<sub>2</sub>）",
+ src:"例題1 問6（岡山大 2026 改）",
+ choices:["4.5 L","9.0 L","2.2 L","4.0 L"],a:0,
+ exp:"H<sub>2</sub>O<sub>2</sub> = 0.80×0.500 = 0.40 mol。係数比より O<sub>2</sub> = 0.20 mol → 0.20×22.4 = <b>4.5 L</b>。"},
+{q:"可逆反応 X + Y ⇌ 2Z で、正反応の速度式が v<sub>1</sub> = k<sub>1</sub>[X][Y]、逆反応が v<sub>2</sub> = k<sub>2</sub>[Z]<sup>2</sup> のとき、平衡定数 K を k<sub>1</sub>、k<sub>2</sub> で表すと？",
+ src:"例題2 問2（広島大 2025 改）",
+ choices:["K = k<sub>1</sub>/k<sub>2</sub>","K = k<sub>2</sub>/k<sub>1</sub>","K = k<sub>1</sub>×k<sub>2</sub>","K = k<sub>1</sub>−k<sub>2</sub>"],a:0,
+ exp:"平衡時 v<sub>1</sub> = v<sub>2</sub> より k<sub>1</sub>[X][Y] = k<sub>2</sub>[Z]<sup>2</sup>。K = [Z]<sup>2</sup>/([X][Y]) = <b>k<sub>1</sub>/k<sub>2</sub></b>。"},
+{q:"上の可逆反応に触媒を加えたとき、k<sub>1</sub>、k<sub>2</sub>、平衡定数 K はそれぞれどうなるか。",
+ src:"例題2 問3（広島大 2025 改）",
+ choices:["k<sub>1</sub>・k<sub>2</sub> は大きくなり、K は変わらない","k<sub>1</sub>・k<sub>2</sub>・K すべて大きくなる","k<sub>1</sub> のみ大きくなり、k<sub>2</sub>・K は変わらない","k<sub>1</sub>・k<sub>2</sub>・K すべて変わらない"],a:0,
+ exp:"触媒は正・逆両方向の活性化エネルギーを同じだけ下げるので k<sub>1</sub> と k<sub>2</sub> は同じ割合で大きくなり、比 K = k<sub>1</sub>/k<sub>2</sub> は<b>不変</b>。"},
+{q:"[A] を2倍にすると v が2倍、[B] を2倍にすると v が4倍になった。反応速度式は？",
+ src:"類題1−1",
+ choices:["v = k[A][B]<sup>2</sup>","v = k[A]<sup>2</sup>[B]","v = k[A][B]","v = k[A]<sup>2</sup>[B]<sup>2</sup>"],a:0,
+ exp:"[A]2倍→v2倍で x = 1、[B]2倍→v4倍（2<sup>2</sup>）で y = 2。<b>v = k[A][B]<sup>2</sup></b>。次数は係数からではなく実験データから決める。"},
+{q:"ある一次反応で、濃度が初濃度の 1/8 になるまでに 600 秒を要した。この反応の半減期は？",
+ src:"類題1−2",
+ choices:["200 秒","100 秒","300 秒","600 秒"],a:0,
+ exp:"1/8 = (1/2)<sup>3</sup> なので半減期3回分 = 600 秒。半減期は <b>200 秒</b>。一次反応の半減期は濃度によらず一定。"},
+{q:"温度が 10 K 上がるごとに反応速度が2倍になる反応がある。27 ℃から 57 ℃に上げると反応速度は何倍？",
+ src:"類題1−3",
+ choices:["8倍","6倍","4倍","16倍"],a:0,
+ exp:"30 K 上昇 = 10 K×3 回 → 2<sup>3</sup> = <b>8倍</b>。「2倍が3回」であって「2×3 = 6倍」ではない点に注意。"},
+{q:"反応に触媒を加えたとき、<u>変化しない</u>ものはどれか。",
+ src:"第1日 頻出ポイント4",
+ choices:["反応エンタルピー ΔH","活性化エネルギー","速度定数 k","反応速度"],a:0,
+ exp:"触媒は活性化エネルギーの小さい別経路をつくる → E<sub>a</sub> は小さくなり k・速度は大きくなるが、反応物と生成物のエンタルピー差 <b>ΔH（と平衡定数 K）は変わらない</b>。"}
+]},
+{
+title:"第2日　化学平衡 ― 気相平衡とルシャトリエの原理",
+note:"平衡表・Kc と Kp・解離度と平均分子量・平衡移動",
+qs:[
+{q:"N<sub>2</sub> + 3H<sub>2</sub> ⇌ 2NH<sub>3</sub>。窒素 1.00 mol、水素 3.00 mol、アンモニア 0.60 mol を 1.00 L の容器に入れ一定温度に保つと、平衡時に NH<sub>3</sub> は 1.20 mol だった。Kc は？",
+ src:"例題3 問2（茨城大 2025 改）",
+ choices:["2.2×10<sup>−1</sup> L<sup>2</sup>/mol<sup>2</sup>","4.5 L<sup>2</sup>/mol<sup>2</sup>","2.2×10<sup>−1</sup> mol<sup>2</sup>/L<sup>2</sup>","1.4×10<sup>−1</sup> L<sup>2</sup>/mol<sup>2</sup>"],a:0,
+ exp:"NH<sub>3</sub> が +0.60 mol → N<sub>2</sub> −0.30、H<sub>2</sub> −0.90。平衡時 [N<sub>2</sub>] = 0.70、[H<sub>2</sub>] = 2.10、[NH<sub>3</sub>] = 1.20。Kc = 1.20<sup>2</sup>/(0.70×2.10<sup>3</sup>) ≒ <b>2.2×10<sup>−1</sup> L<sup>2</sup>/mol<sup>2</sup></b>。単位は (mol/L)<sup>Δn</sup> = (mol/L)<sup>−2</sup>。"},
+{q:"N<sub>2</sub> + 3H<sub>2</sub> ⇌ 2NH<sub>3</sub> について、圧平衡定数 Kp を Kc、R、T で表すと？",
+ src:"例題3 問3（茨城大 2025 改）",
+ choices:["Kp = Kc(RT)<sup>−2</sup>","Kp = Kc(RT)<sup>2</sup>","Kp = Kc(RT)","Kp = Kc/(RT)<sup>3</sup>"],a:0,
+ exp:"Kp = Kc(RT)<sup>Δn</sup>。Δn = 2−(1+3) = −2 より <b>Kp = Kc(RT)<sup>−2</sup></b>。"},
+{q:"N<sub>2</sub> + 3H<sub>2</sub> ⇌ 2NH<sub>3</sub>（発熱反応）が平衡状態にある。再び平衡に達したとき NH<sub>3</sub> が<u>増える</u>操作をすべて選ぶと？<br>(あ) 容積・温度一定で N<sub>2</sub> を注入　(い) 容積・温度一定で Ar を注入　(う) 温度一定で容積を小さくする　(え) 容積一定で温度を高くする　(お) 触媒を加える",
+ src:"例題3 問4（茨城大 2025 改）",
+ choices:["(あ)・(う)","(あ)・(い)・(う)","(う)・(え)","(あ)・(う)・(お)"],a:0,
+ exp:"(あ) N<sub>2</sub> 追加 → 右へ。(う) 圧縮 → 分子数が減る右へ。(い) 体積一定の不活性気体添加は各濃度・分圧が変わらず<b>移動しない</b>。(え) 加熱は吸熱方向（左）へ。(お) 触媒は平衡を移動させない。"},
+{q:"次のうち<u>正しい</u>記述の組合せは？<br>(ア) 平衡に達するまでの時間はあらゆる反応で同じ　(イ) 触媒を加えると平衡が移動する　(ウ) 溶質とその飽和溶液の混合物は温度一定なら溶解平衡にある　(エ) 純水の電離平衡では [H<sup>+</sup>] = [OH<sup>−</sup>]",
+ src:"例題4 問1（静岡大 2024 改）",
+ choices:["(ウ)・(エ)","(ア)・(ウ)","(イ)・(エ)","(ウ)のみ"],a:0,
+ exp:"(ア) 平衡到達時間は反応や条件で異なる。(イ) 触媒は到達を速めるだけで平衡は移動しない。<b>(ウ)・(エ) が正しい</b>。"},
+{q:"A + 3B ⇌ 2C の正反応の活性化エネルギーは 326 kJ/mol、逆反応は 418 kJ/mol。正反応の ΔH は？",
+ src:"例題4 問3（静岡大 2024 改）",
+ choices:["−92 kJ/mol","+92 kJ/mol","−744 kJ/mol","+744 kJ/mol"],a:0,
+ exp:"ΔH = E<sub>a</sub>(正) − E<sub>a</sub>(逆) = 326 − 418 = <b>−92 kJ/mol</b>（発熱反応）。右へ動かすには温度を下げる。"},
+{q:"H<sub>2</sub> 1.00 mol と I<sub>2</sub> 1.00 mol を体積一定の容器で反応させると H<sub>2</sub> + I<sub>2</sub> ⇌ 2HI の平衡に達し、HI が 1.60 mol 生成した。Kc は？",
+ src:"類題2−1",
+ choices:["64","8","16","32"],a:0,
+ exp:"平衡時 H<sub>2</sub> = I<sub>2</sub> = 0.20 mol、HI = 1.60 mol。Kc = 1.60<sup>2</sup>/0.20<sup>2</sup> = <b>64</b>。分子数が変わらない反応なので V が消えて無単位。"},
+{q:"N<sub>2</sub>O<sub>4</sub> 1.00 mol を容器に入れて 320 K に保つと N<sub>2</sub>O<sub>4</sub> ⇌ 2NO<sub>2</sub> の平衡に達し、総物質量は 1.25 mol になった。解離度 α は？",
+ src:"類題2−2",
+ choices:["0.25","0.20","0.50","0.125"],a:0,
+ exp:"x mol 解離すると総量 = (1.00−x)+2x = 1.00+x = 1.25 → x = 0.25。<b>α = 0.25</b>。"},
+{q:"上の平衡（総物質量 1.25 mol、全圧 1.0×10<sup>5</sup> Pa）における圧平衡定数 Kp は？",
+ src:"類題2−2",
+ choices:["2.7×10<sup>4</sup> Pa","6.4×10<sup>4</sup> Pa","1.0×10<sup>5</sup> Pa","2.7×10<sup>3</sup> Pa"],a:0,
+ exp:"p(N<sub>2</sub>O<sub>4</sub>) = (0.75/1.25)×10<sup>5</sup> = 6.0×10<sup>4</sup> Pa、p(NO<sub>2</sub>) = 4.0×10<sup>4</sup> Pa。Kp = (4.0×10<sup>4</sup>)<sup>2</sup>/(6.0×10<sup>4</sup>) ≒ <b>2.7×10<sup>4</sup> Pa</b>。"},
+{q:"上の平衡混合気体（N<sub>2</sub>O<sub>4</sub> = 92、総物質量 1.25 mol）の平均分子量は？",
+ src:"類題2−2",
+ choices:["74","92","46","84"],a:0,
+ exp:"質量は 92 g のまま不変で総物質量 1.25 mol → 92/1.25 = <b>74</b>。M = M<sub>0</sub>/(1+α) でも同じ。"},
+{q:"C(固) + CO<sub>2</sub>(気) ⇌ 2CO(気)（吸熱反応）の平衡について、温度一定のまま圧縮すると平衡は？",
+ src:"類題2−3",
+ choices:["左に移動する","右に移動する","移動しない","固体があるので判断できない"],a:0,
+ exp:"圧縮 → 気体分子数が減る方向へ。気体は右辺 2 分子・左辺 1 分子（固体 C は数えない）なので<b>左へ移動</b>。なお Kp = p(CO)<sup>2</sup>/p(CO<sub>2</sub>) にも固体は含めない。"}
+]},
+{
+title:"第3日　酸・塩基の電離平衡 ― pH・緩衝液・塩の加水分解",
+note:"√(cKa) の近似・緩衝液・加水分解の3つの型で処理する",
+qs:[
+{q:"0.10 mol/L 酢酸水溶液（Ka = 2.7×10<sup>−5</sup> mol/L、log<sub>10</sub>2.7 = 0.43、α ≪ 1）の pH は？",
+ src:"例題5 問2（茨城大 2024 改）",
+ choices:["2.8","3.0","2.4","3.4"],a:0,
+ exp:"[H<sup>+</sup>] = √(cKa) = √(2.7×10<sup>−6</sup>)。pH = 3 − (1/2)log2.7 = 3 − 0.215 ≒ <b>2.8</b>。"},
+{q:"上の酢酸水溶液 100 mL に 0.10 mol/L NaOH 水溶液 50 mL を加えた混合溶液の pH は？",
+ src:"例題5 問3（茨城大 2024 改）",
+ choices:["4.6","2.8","7.0","5.6"],a:0,
+ exp:"酢酸 10 mmol の半分が中和され、酢酸 5.0 mmol＋酢酸ナトリウム 5.0 mmol の緩衝液に。[H<sup>+</sup>] = Ka×(酸/塩) = 2.7×10<sup>−5</sup>。pH = 5 − 0.43 ≒ <b>4.6</b>。半分中和 → pH = pKa の典型。"},
+{q:"濃度 c mol/L の弱酸で電離度 α が1に比べて十分小さいとき、Ka = cα<sup>2</sup>/(1−α) はどう近似できるか。",
+ src:"例題6 問1（岡山大 2024 改）",
+ choices:["Ka ≒ cα<sup>2</sup>","Ka ≒ cα","Ka ≒ c<sup>2</sup>α<sup>2</sup>","Ka ≒ α<sup>2</sup>/c"],a:0,
+ exp:"α ≪ 1 なら 1−α ≒ 1 より <b>Ka ≒ cα<sup>2</sup></b>。ここから α = √(Ka/c)、[H<sup>+</sup>] = √(cKa)。導出過程自体が穴埋めで頻出。"},
+{q:"酢酸水溶液に酢酸ナトリウムを溶かすと、CH<sub>3</sub>COOH ⇌ CH<sub>3</sub>COO<sup>−</sup> + H<sup>+</sup> の平衡はどうなるか。またこの現象を何というか。",
+ src:"例題6 問2（岡山大 2024 改）",
+ choices:["左へ移動する・共通イオン効果","右へ移動する・共通イオン効果","左へ移動する・緩衝作用","移動しない・希釈律"],a:0,
+ exp:"CH<sub>3</sub>COO<sup>−</sup> が増えるので、それをやわらげる<b>左へ移動</b>。共通のイオンを加えて平衡が移動する現象を<b>共通イオン効果</b>という。"},
+{q:"0.10 mol/L 酢酸ナトリウム水溶液の pH は？（Ka = 2.5×10<sup>−5</sup> mol/L、Kw = 1.0×10<sup>−14</sup> (mol/L)<sup>2</sup>、log<sub>10</sub>2 = 0.30、√10 = 3.16）",
+ src:"例題6 問4（岡山大 2024 改）",
+ choices:["8.8","5.2","7.0","9.3"],a:0,
+ exp:"加水分解 CH<sub>3</sub>COO<sup>−</sup> + H<sub>2</sub>O ⇌ CH<sub>3</sub>COOH + OH<sup>−</sup>。Kh = Kw/Ka = 4.0×10<sup>−10</sup>。[OH<sup>−</sup>] = √(c・Kh) = 6.32×10<sup>−6</sup> → pOH = 5.2 → <b>pH = 8.8</b>。"},
+{q:"Ka = 2.5×10<sup>−5</sup> mol/L の弱酸 HA の 0.040 mol/L 水溶液の電離度 α は？",
+ src:"類題3−1",
+ choices:["0.025","0.25","0.0025","0.050"],a:0,
+ exp:"[H<sup>+</sup>] = √(0.040×2.5×10<sup>−5</sup>) = 1.0×10<sup>−3</sup> mol/L（pH = 3.0）。α = [H<sup>+</sup>]/c = 1.0×10<sup>−3</sup>/0.040 = <b>0.025</b>。"},
+{q:"0.20 mol/L 酢酸と 0.10 mol/L 酢酸ナトリウムを同体積ずつ混合した水溶液の pH は？（Ka = 2.0×10<sup>−5</sup> mol/L、log<sub>10</sub>2 = 0.30）",
+ src:"類題3−2",
+ choices:["4.4","4.7","5.0","4.1"],a:0,
+ exp:"混合後は酢酸 0.10、塩 0.050 mol/L。[H<sup>+</sup>] = Ka×(0.10/0.050) = 4.0×10<sup>−5</sup>。pH = 5 − log4 = 5 − 0.60 = <b>4.4</b>。"},
+{q:"Ka = 1.0×10<sup>−5</sup> mol/L の弱酸の塩 NaA の 0.40 mol/L 水溶液の pH は？（Kw = 1.0×10<sup>−14</sup> (mol/L)<sup>2</sup>、log<sub>10</sub>2 = 0.30）",
+ src:"類題3−3",
+ choices:["9.3","4.7","8.8","10.3"],a:0,
+ exp:"Kh = Kw/Ka = 1.0×10<sup>−9</sup>。[OH<sup>−</sup>] = √(0.40×1.0×10<sup>−9</sup>) = 2.0×10<sup>−5</sup> → pOH = 5 − log2 = 4.7 → <b>pH = 9.3</b>。"},
+{q:"弱酸の水溶液を水で薄めていくと、電離度 α と [H<sup>+</sup>] はそれぞれどうなるか。",
+ src:"第3日 頻出ポイント1",
+ choices:["α は大きくなり、[H<sup>+</sup>] は小さくなる","α も [H<sup>+</sup>] も大きくなる","α は小さくなり、[H<sup>+</sup>] も小さくなる","α は変わらず、[H<sup>+</sup>] は小さくなる"],a:0,
+ exp:"α = √(Ka/c) より c が小さいほど <b>α は大</b>。一方 [H<sup>+</sup>] = √(cKa) より <b>[H<sup>+</sup>] は小</b>（オストワルトの希釈律）。"},
+{q:"酢酸と酢酸ナトリウムの混合溶液（緩衝液）に少量の酸を加えても pH がほとんど変化しない理由として正しいものは？",
+ src:"例題5 問4（茨城大 2024 改）",
+ choices:["多量に存在する CH<sub>3</sub>COO<sup>−</sup> が H<sup>+</sup> と反応して CH<sub>3</sub>COOH になり、H<sup>+</sup> が消費されるから","CH<sub>3</sub>COOH が H<sup>+</sup> と反応して分解するから","加えた H<sup>+</sup> が Na<sup>+</sup> と塩をつくるから","酢酸の電離度が大きくなって H<sup>+</sup> を吸収するから"],a:0,
+ exp:"<b>CH<sub>3</sub>COO<sup>−</sup> + H<sup>+</sup> → CH<sub>3</sub>COOH</b> の反応で加えた H<sup>+</sup> が消費される。塩基を加えたときは CH<sub>3</sub>COOH + OH<sup>−</sup> → CH<sub>3</sub>COO<sup>−</sup> + H<sub>2</sub>O。この記述は最頻出。"}
+]},
+{
+title:"第4日　中和滴定（二段滴定・逆滴定）と溶解度積",
+note:"器具の扱い・指示薬の選択理由・二段滴定の量的関係・Ksp とモール法",
+qs:[
+{q:"中和滴定で、使用する溶液で内部を数回すすいでから（共洗いして）用いる器具の組合せは？",
+ src:"類題4−3／頻出ポイント1",
+ choices:["ホールピペットとビュレット","メスフラスコとコニカルビーカー","ホールピペットとメスフラスコ","ビュレットとコニカルビーカー"],a:0,
+ exp:"<b>ホールピペット・ビュレット</b>は水でぬれたままだと濃度が薄まるので共洗い。メスフラスコ・コニカルビーカーは純水でぬれたままでよい。"},
+{q:"コニカルビーカーは内部が純水でぬれたまま使ってよい。その理由は？",
+ src:"類題4−3",
+ choices:["中に入れる溶質の物質量が変わらないから","水はすぐ蒸発するから","中和反応に水が必要だから","ガラスが水を吸収するから"],a:0,
+ exp:"ホールピペットで正確にはかり取った時点で<b>溶質の物質量は決まっており</b>、水が加わっても物質量は変わらない。理由説明が頻出。"},
+{q:"0.10 mol/L 酢酸を 0.10 mol/L NaOH で滴定するとき、適切な指示薬とその理由は？",
+ src:"類題4−3",
+ choices:["フェノールフタレイン。中和点で生じる酢酸ナトリウムが加水分解して塩基性を示すから","メチルオレンジ。中和点で生じる塩が酸性を示すから","フェノールフタレイン。酢酸が弱酸で pH が低いから","どちらでもよい。中和点は中性だから"],a:0,
+ exp:"弱酸×強塩基 → 中和点は<b>塩基性</b>（塩の加水分解）→ 塩基性側に変色域をもつ<b>フェノールフタレイン</b>。強酸×弱塩基ならメチルオレンジ。"},
+{q:"NaOH と Na<sub>2</sub>CO<sub>3</sub> の混合水溶液 20.0 mL を 0.100 mol/L 塩酸で滴定すると、第1終点（フェノールフタレイン）まで 30.0 mL、第1終点から第2終点（メチルオレンジ）まで 10.0 mL を要した。もとの水溶液中の NaOH と Na<sub>2</sub>CO<sub>3</sub> の濃度は？",
+ src:"例題7 問3（名古屋大 2025 改）",
+ choices:["NaOH 0.100 mol/L、Na<sub>2</sub>CO<sub>3</sub> 0.0500 mol/L","NaOH 0.150 mol/L、Na<sub>2</sub>CO<sub>3</sub> 0.0500 mol/L","NaOH 0.100 mol/L、Na<sub>2</sub>CO<sub>3</sub> 0.100 mol/L","NaOH 0.0500 mol/L、Na<sub>2</sub>CO<sub>3</sub> 0.100 mol/L"],a:0,
+ exp:"第1〜第2終点間の 10.0 mL が Na<sub>2</sub>CO<sub>3</sub> の2段目（NaHCO<sub>3</sub>＋HCl）に対応 → 1.00×10<sup>−3</sup> mol = <b>0.0500 mol/L</b>。1段目にも同量 10.0 mL 使うので NaOH 分は 30.0−10.0 = 20.0 mL → 2.00×10<sup>−3</sup> mol = <b>0.100 mol/L</b>。"},
+{q:"上の滴定で、第2終点の検出にフェノールフタレイン（変色域 pH 8〜10）が使えない理由は？",
+ src:"例題7 問4（名古屋大 2025 改）",
+ choices:["第2終点付近は溶けた CO<sub>2</sub> のため弱酸性で、pH 8〜10 の変色域では終点より手前で変色が終わるから","第2終点付近は強塩基性で変色域を超えるから","フェノールフタレインが塩酸と反応して分解するから","CO<sub>2</sub> がフェノールフタレインを還元するから"],a:0,
+ exp:"第2終点では NaHCO<sub>3</sub> + HCl → NaCl + H<sub>2</sub>O + CO<sub>2</sub> により<b>炭酸で弱酸性（pH 4 前後）</b>。酸性側に変色域をもつメチルオレンジが必要。"},
+{q:"モール法：3.0×10<sup>−2</sup> mol/L の Cl<sup>−</sup> を含む水溶液に AgNO<sub>3</sub> を滴下する。AgCl（Ksp = 1.8×10<sup>−10</sup> (mol/L)<sup>2</sup>）が沈殿し始めるときの [Ag<sup>+</sup>] は？",
+ src:"例題8 問1（岡山大 2025 改）",
+ choices:["6.0×10<sup>−9</sup> mol/L","1.8×10<sup>−10</sup> mol/L","5.4×10<sup>−12</sup> mol/L","6.0×10<sup>−8</sup> mol/L"],a:0,
+ exp:"[Ag<sup>+</sup>] = Ksp/[Cl<sup>−</sup>] = 1.8×10<sup>−10</sup>/3.0×10<sup>−2</sup> = <b>6.0×10<sup>−9</sup> mol/L</b>。"},
+{q:"同じ溶液中の CrO<sub>4</sub><sup>2−</sup> は 1.0×10<sup>−2</sup> mol/L。Ag<sub>2</sub>CrO<sub>4</sub>（Ksp = 3.6×10<sup>−12</sup> (mol/L)<sup>3</sup>、√3.6 = 1.9）が沈殿し始めるときの [Ag<sup>+</sup>] は？",
+ src:"例題8 問2（岡山大 2025 改）",
+ choices:["1.9×10<sup>−5</sup> mol/L","3.6×10<sup>−10</sup> mol/L","6.0×10<sup>−7</sup> mol/L","1.9×10<sup>−6</sup> mol/L"],a:0,
+ exp:"Ksp = [Ag<sup>+</sup>]<sup>2</sup>[CrO<sub>4</sub><sup>2−</sup>] より [Ag<sup>+</sup>]<sup>2</sup> = 3.6×10<sup>−12</sup>/1.0×10<sup>−2</sup> = 3.6×10<sup>−10</sup> → [Ag<sup>+</sup>] = <b>1.9×10<sup>−5</sup> mol/L</b>。A<sub>2</sub>B 型は2乗を忘れない。"},
+{q:"AgCl の Ksp = 1.8×10<sup>−10</sup> (mol/L)<sup>2</sup>、√1.8 = 1.34 のとき、純水に対する AgCl の溶解度は？",
+ src:"類題4−1",
+ choices:["1.3×10<sup>−5</sup> mol/L","1.8×10<sup>−5</sup> mol/L","1.8×10<sup>−10</sup> mol/L","9.0×10<sup>−6</sup> mol/L"],a:0,
+ exp:"溶解度 s とすると [Ag<sup>+</sup>] = [Cl<sup>−</sup>] = s より s<sup>2</sup> = Ksp → s = √(1.8×10<sup>−10</sup>) ≒ <b>1.3×10<sup>−5</sup> mol/L</b>。0.10 mol/L NaCl 中では共通イオン効果で 1.8×10<sup>−9</sup> mol/L まで低下。"},
+{q:"逆滴定：ある量の NH<sub>3</sub> を 0.50 mol/L 硫酸 20.0 mL に完全に吸収させ、残った硫酸を 0.20 mol/L NaOH で滴定すると 25.0 mL を要した。吸収された NH<sub>3</sub> は？",
+ src:"類題4−2",
+ choices:["0.0150 mol","0.0200 mol","0.00500 mol","0.0100 mol"],a:0,
+ exp:"硫酸の出しうる H<sup>+</sup> = 0.50×0.0200×<b>2</b> = 0.0200 mol（価数に注意）。NaOH で中和された分 = 0.00500 mol。NH<sub>3</sub> = 0.0200−0.00500 = <b>0.0150 mol</b>（標準状態で 336 mL）。"},
+{q:"上の逆滴定（NaOH で残った硫酸を滴定）の指示薬として適切なのは？",
+ src:"類題4−2",
+ choices:["メチルオレンジ。中和点で硫酸アンモニウム（強酸と弱塩基の塩）が酸性を示すから","フェノールフタレイン。中和点が塩基性だから","どちらでもよい。中和点は中性だから","指示薬は不要。色の変化で分かるから"],a:0,
+ exp:"中和点の溶液は (NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub> 水溶液 → <b>酸性</b>。酸性側に変色域をもつ<b>メチルオレンジ</b>が適する。"}
+]},
+{
+title:"第5日　反応エンタルピーとヘスの法則",
+note:"生成エンタルピー型・結合エネルギー型・格子エネルギー型の3パターン",
+qs:[
+{q:"新課程のエンタルピー表記で、発熱反応の ΔH の符号は？",
+ src:"第5日 頻出ポイント1",
+ choices:["ΔH < 0（負）","ΔH > 0（正）","ΔH = 0","反応による"],a:0,
+ exp:"発熱反応は系のエンタルピーが下がるので <b>ΔH < 0</b>。旧課程の熱化学方程式（発熱を＋で書く）と符号が逆で、答案の符号ミスが最多。"},
+{q:"生成エンタルピーが CO<sub>2</sub>(気) −394、H<sub>2</sub>O(液) −286、CH<sub>4</sub>(気) −75（kJ/mol）のとき、メタンの燃焼エンタルピーは？",
+ src:"例題9 問2（金沢大 2025 改）",
+ choices:["−891 kJ/mol","−966 kJ/mol","+891 kJ/mol","−605 kJ/mol"],a:0,
+ exp:"ΔH = (生成物の生成エンタルピー和)−(反応物の和) = {(−394)+2×(−286)}−(−75) = −966+75 = <b>−891 kJ/mol</b>。"},
+{q:"黒鉛の昇華エンタルピー +715 kJ/mol、H−H 結合エネルギー 436 kJ/mol、CH<sub>4</sub> の生成エンタルピー −75 kJ/mol のとき、C−H 結合の結合エネルギーは？",
+ src:"例題9 問3（金沢大 2025 改）",
+ choices:["約 416 kJ/mol","約 1662 kJ/mol","約 372 kJ/mol","約 436 kJ/mol"],a:0,
+ exp:"CH<sub>4</sub>(気) → C(気)+4H(気) の ΔH = 4E。経路：CH<sub>4</sub> → C(黒鉛)+2H<sub>2</sub>（+75）→ C(気)+4H(気)（+715+2×436）。4E = 75+715+872 = 1662 → E ≒ <b>416 kJ/mol</b>。"},
+{q:"メタンの燃焼で、生成する水が液体の場合と気体の場合、発生する熱量が大きいのは？",
+ src:"例題9 問4（金沢大 2025 改）",
+ choices:["液体の場合。気体の水が液体になるとき凝縮熱を放出するから","気体の場合。気体の方がエネルギーが高いから","同じ。全体の反応式が同じだから","条件によって変わる"],a:0,
+ exp:"H<sub>2</sub>O(気) → H<sub>2</sub>O(液) で凝縮熱（蒸発エンタルピー分）を放出するので、<b>液体まで冷えた場合の方が発熱量は大きい</b>。状態表記の違いを問う頻出パターン。"},
+{q:"NaCl の格子エネルギーに相当する ΔH<sub>1</sub> = +772 kJ、水和の ΔH が Na<sup>+</sup>：−406 kJ、Cl<sup>−</sup>：−362 kJ のとき、NaCl(固) の水への溶解エンタルピーは？",
+ src:"例題10 問2（千葉大 2026 改）",
+ choices:["+4 kJ/mol","−4 kJ/mol","+1540 kJ/mol","−768 kJ/mol"],a:0,
+ exp:"ヘスの法則：「固体 → 気体状イオン（+772）」→「水和（−406、−362）」。ΔH = 772−406−362 = <b>+4 kJ/mol</b>（吸熱）。"},
+{q:"NaCl と KCl では、格子エネルギーが大きいのはどちらか。",
+ src:"例題10 問3（千葉大 2026 改）",
+ choices:["NaCl。Na<sup>+</sup> は K<sup>+</sup> よりイオン半径が小さく、イオン間距離が短いため静電気力が強いから","KCl。K<sup>+</sup> の方が電子が多く結合が強いから","NaCl。Na の方がイオン化傾向が大きいから","同じ。どちらも1価どうしの塩だから"],a:0,
+ exp:"格子エネルギーは<b>イオン間距離が短く、電荷が大きいほど大きい</b>。Na<sup>+</sup> の方が小さいので <b>NaCl</b> の方が大きい。"},
+{q:"NaCl の溶解は吸熱過程（ΔH = +4 kJ/mol）なのに、実際には水によく溶ける。その主な要因は？",
+ src:"例題10 問4（千葉大 2026 改）",
+ choices:["溶解によってイオンが散らばり、粒子の乱雑さが増大するから","水和によって大きな熱が発生するから","NaCl の格子エネルギーが小さいから","水の温度が上がって溶解度が増すから"],a:0,
+ exp:"エンタルピー的に不利でも、<b>乱雑さ（エントロピー）の増大</b>が溶解を進行させる。30字記述で頻出。"},
+{q:"NaOH(固) の溶解エンタルピーは −44.5 kJ/mol、NaOH 水溶液と塩酸の中和エンタルピーは −56.5 kJ/mol。NaOH(固) 1 mol を十分な量の希塩酸に溶かしたときのエンタルピー変化は？",
+ src:"類題5−1",
+ choices:["−101 kJ","−12 kJ","+101 kJ","−56.5 kJ"],a:0,
+ exp:"ヘスの法則より（溶解）＋（中和）= −44.5＋(−56.5) = <b>−101 kJ</b>。"},
+{q:"N<sub>2</sub> + 3H<sub>2</sub> → 2NH<sub>3</sub> の ΔH = −92 kJ。N≡N の結合エネルギー 945 kJ/mol、H−H 436 kJ/mol のとき、N−H 結合の結合エネルギーは？",
+ src:"類題5−2",
+ choices:["約 391 kJ/mol","約 359 kJ/mol","約 2345 kJ/mol","約 469 kJ/mol"],a:0,
+ exp:"ΔH = (反応物の結合エネルギー和)−(生成物の和)：−92 = (945+3×436)−6E → 6E = 2253+92 = 2345 → E ≒ <b>391 kJ/mol</b>。結合エネルギー型は生成エンタルピー型と引き算の向きが逆。"},
+{q:"黒鉛の燃焼エンタルピーは −394 kJ/mol、ダイヤモンドは −396 kJ/mol。C(黒鉛) → C(ダイヤモンド) の ΔH と、エネルギー的に安定なのはどちらか。",
+ src:"類題5−3",
+ choices:["ΔH = +2 kJ で、黒鉛が安定","ΔH = −2 kJ で、ダイヤモンドが安定","ΔH = +2 kJ で、ダイヤモンドが安定","ΔH = −790 kJ で、黒鉛が安定"],a:0,
+ exp:"ΔH = −394−(−396) = <b>+2 kJ</b>。燃焼して同じ CO<sub>2</sub> になるとき放出熱が小さい黒鉛の方がもとのエンタルピーが低い → <b>黒鉛が安定</b>。"}
+]},
+{
+title:"第6日　電池と電気分解",
+note:"すべての量計算を「e⁻ の mol」を軸に組み立てる",
+qs:[
+{q:"電池において、負極で起こる反応は？",
+ src:"第6日 頻出ポイント1",
+ choices:["酸化反応（e<sup>−</sup> を放出する）","還元反応（e<sup>−</sup> を受け取る）","中和反応","加水分解反応"],a:0,
+ exp:"<b>負極 = 酸化、正極 = 還元</b>。イオン化傾向の大きい金属が負極になる。電気分解の陽極 = 酸化・陰極 = 還元と混同しないこと。"},
+{q:"鉛蓄電池を放電させたときの変化として正しいものは？",
+ src:"第6日 頻出ポイント1／類題6−1",
+ choices:["両極とも PbSO<sub>4</sub> が生じて質量が増加し、希硫酸は薄くなる","負極のみ質量が増加し、希硫酸は濃くなる","両極とも質量が減少し、希硫酸は薄くなる","正極のみ質量が増加し、希硫酸の濃度は変わらない"],a:0,
+ exp:"負極 Pb → PbSO<sub>4</sub>（+96 g/2 mol e<sup>−</sup>）、正極 PbO<sub>2</sub> → PbSO<sub>4</sub>（+64 g/2 mol e<sup>−</sup>）。H<sub>2</sub>SO<sub>4</sub> が消費され水が生成するので<b>希硫酸は薄くなる</b>。"},
+{q:"電解槽 A（CuSO<sub>4</sub>aq）と B（NaOHaq）を直列につなぎ、0.500 A の電流を 3860 秒間流した。流れた電子の物質量は？（F = 9.65×10<sup>4</sup> C/mol）",
+ src:"例題11 問2（静岡大 2026 改）",
+ choices:["0.0200 mol","0.0100 mol","0.0400 mol","0.200 mol"],a:0,
+ exp:"Q = it = 0.500×3860 = 1930 C。n(e<sup>−</sup>) = 1930/9.65×10<sup>4</sup> = <b>0.0200 mol</b>。直列回路では各電解槽に同じ電気量が流れる。"},
+{q:"上の電気分解で、電解槽 A（白金電極、CuSO<sub>4</sub>aq）の陰極に析出する銅の質量は？（Cu = 63.5）",
+ src:"例題11 問3（静岡大 2026 改）",
+ choices:["0.635 g","1.27 g","0.318 g","0.0635 g"],a:0,
+ exp:"Cu<sup>2+</sup> + 2e<sup>−</sup> → Cu より e<sup>−</sup> 0.0200 mol で Cu 0.0100 mol → 0.0100×63.5 = <b>0.635 g</b>。"},
+{q:"上の電気分解で、電解槽 B（NaOHaq）の陰極・陽極で発生する気体の体積（標準状態）は？",
+ src:"例題11 問4（静岡大 2026 改）",
+ choices:["陰極 H<sub>2</sub> 224 mL、陽極 O<sub>2</sub> 112 mL","陰極 H<sub>2</sub> 112 mL、陽極 O<sub>2</sub> 224 mL","陰極 H<sub>2</sub> 224 mL、陽極 O<sub>2</sub> 224 mL","陰極 O<sub>2</sub> 112 mL、陽極 H<sub>2</sub> 224 mL"],a:0,
+ exp:"陰極 2H<sub>2</sub>O+2e<sup>−</sup> → H<sub>2</sub>+2OH<sup>−</sup>：H<sub>2</sub> = 0.0100 mol = <b>224 mL</b>。陽極 4OH<sup>−</sup> → O<sub>2</sub>+2H<sub>2</sub>O+4e<sup>−</sup>：O<sub>2</sub> = 0.00500 mol = <b>112 mL</b>。"},
+{q:"白金電極で CuSO<sub>4</sub> 水溶液を電気分解すると、水溶液の pH はどうなるか。",
+ src:"例題11 問5（静岡大 2026 改）",
+ choices:["小さくなる。陽極で水が酸化されて H<sup>+</sup> が生成する一方、陰極では Cu が析出して H<sup>+</sup> は消費されないから","大きくなる。陰極で OH<sup>−</sup> が生成するから","変わらない。両極の反応が打ち消し合うから","大きくなる。H<sup>+</sup> が陰極で消費されるから"],a:0,
+ exp:"陽極：2H<sub>2</sub>O → O<sub>2</sub>+4H<sup>+</sup>+4e<sup>−</sup> で H<sup>+</sup> 生成、陰極では Cu 析出（H<sup>+</sup> を消費しない）→ <b>pH は小さくなる（酸性が強くなる）</b>。"},
+{q:"銅の電解精錬で、粗銅中の不純物（亜鉛・鉄・銀・金）のうち、陽極泥になるものの組合せは？",
+ src:"例題12 問2（千葉大 2024 改）",
+ choices:["銀・金","亜鉛・鉄","亜鉛・金","鉄・銀"],a:0,
+ exp:"銅より<b>イオン化傾向の大きい Zn・Fe はイオンとなって溶け出し</b>、<b>小さい Ag・Au は酸化されず単体のまま陽極泥として沈殿</b>する。低電圧なので Zn<sup>2+</sup>・Fe<sup>2+</sup> は陰極でも析出しない。"},
+{q:"銅の電解精錬で 9.65 A の電流を 2.00×10<sup>4</sup> 秒間流したとき、陰極に析出する銅の質量は？（Cu = 63.5、F = 9.65×10<sup>4</sup> C/mol）",
+ src:"例題12 問3（千葉大 2024 改）",
+ choices:["63.5 g","127 g","31.8 g","6.35 g"],a:0,
+ exp:"Q = 9.65×2.00×10<sup>4</sup> = 1.93×10<sup>5</sup> C → n(e<sup>−</sup>) = 2.00 mol → Cu = 1.00 mol = <b>63.5 g</b>。"},
+{q:"リン酸型燃料電池で標準状態 2.24 L（0.100 mol）の水素が消費された。流れた電気量と生成した水の質量は？（F = 9.65×10<sup>4</sup> C/mol）",
+ src:"類題6−2",
+ choices:["1.93×10<sup>4</sup> C・水 1.8 g","9.65×10<sup>3</sup> C・水 1.8 g","1.93×10<sup>4</sup> C・水 3.6 g","3.86×10<sup>4</sup> C・水 0.9 g"],a:0,
+ exp:"負極 H<sub>2</sub> → 2H<sup>+</sup>+2e<sup>−</sup> より e<sup>−</sup> = 0.200 mol → Q = 0.200×9.65×10<sup>4</sup> = <b>1.93×10<sup>4</sup> C</b>。全体 2H<sub>2</sub>+O<sub>2</sub> → 2H<sub>2</sub>O より水 0.100 mol = <b>1.8 g</b>。"},
+{q:"イオン交換膜法（陽イオン交換膜、陽極側に飽和 NaCl 水溶液、陰極側に水、炭素電極）で 1.93×10<sup>4</sup> C を流したとき、陰極側に生成する NaOH の質量は？（NaOH = 40.0）",
+ src:"類題6−3",
+ choices:["8.0 g","4.0 g","16.0 g","0.80 g"],a:0,
+ exp:"n(e<sup>−</sup>) = 1.93×10<sup>4</sup>/9.65×10<sup>4</sup> = 0.200 mol。陰極 2H<sub>2</sub>O+2e<sup>−</sup> → H<sub>2</sub>+2OH<sup>−</sup> で OH<sup>−</sup> 0.200 mol、Na<sup>+</sup> が膜を通って陽極側から移動 → NaOH 0.200 mol = <b>8.0 g</b>。"}
+]}
+];
+
+// ===== 状態 =====
+let current = 0;
+const state = DAYS.map(d => ({ answers: Array(d.qs.length).fill(null), order: d.qs.map(q => shuffle([...q.choices.keys()])), graded: false, score: 0 }));
+
+function shuffle(arr){
+  for(let i = arr.length-1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// ===== 描画 =====
+const tabsEl = document.getElementById('tabs');
+const mainEl = document.getElementById('main');
+
+function renderTabs(){
+  tabsEl.innerHTML = '';
+  DAYS.forEach((d,i)=>{
+    const b = document.createElement('button');
+    b.className = 'tab' + (i===current ? ' active':'');
+    const st = state[i];
+    b.innerHTML = `第${i+1}日` + (st.graded ? `<span class="badge">${st.score}/${d.qs.length}</span>` : '');
+    b.onclick = ()=>{ current = i; render(); window.scrollTo({top:0}); };
+    tabsEl.appendChild(b);
+  });
+}
+
+function answeredCount(){ return state[current].answers.filter(a=>a!==null).length; }
+
+function render(){
+  renderTabs();
+  const day = DAYS[current];
+  const st = state[current];
+  mainEl.innerHTML = '';
+
+  const h = document.createElement('div');
+  h.innerHTML = `<div class="day-title">${day.title}</div><div class="day-note">${day.note}（全${day.qs.length}問）</div>`;
+  mainEl.appendChild(h);
+
+  const resultBox = document.createElement('div');
+  resultBox.className = 'result' + (st.graded ? ' show':'');
+  if(st.graded){
+    const pct = Math.round(st.score/day.qs.length*100);
+    const msg = pct===100 ? '満点！完璧です' : pct>=80 ? 'よくできています。間違えた問題の解説を確認しましょう' : pct>=50 ? 'もう一歩。解説を読んでから再挑戦を' : '頻出ポイント整理に戻ってから再挑戦しましょう';
+    resultBox.innerHTML = `<div class="score">${st.score} / ${day.qs.length}</div><div class="msg">正答率 ${pct}%　${msg}</div>`;
+  }
+  mainEl.appendChild(resultBox);
+
+  const prog = document.createElement('div');
+  prog.className = 'progress';
+  prog.id = 'prog';
+  mainEl.appendChild(prog);
+
+  day.qs.forEach((q,qi)=>{
+    const card = document.createElement('div');
+    card.className = 'qcard' + (st.graded ? ' graded':'');
+    let html = `<div class="qhead"><span class="qnum">問${qi+1}</span><span class="qsrc">${q.src}</span></div><div class="qtext">${q.q}</div><div class="choices">`;
+    st.order[qi].forEach(ci=>{
+      const sel = st.answers[qi]===ci;
+      let cls = 'choice' + (sel ? ' selected':'');
+      if(st.graded){
+        if(ci===q.a) cls += ' correct';
+        else if(sel) cls += ' wrong';
+      }
+      html += `<label class="${cls}"><input type="radio" name="q${qi}" ${sel?'checked':''} ${st.graded?'disabled':''} onchange="pick(${qi},${ci})"><span>${q.choices[ci]}</span></label>`;
+    });
+    html += `</div>`;
+    if(st.graded){
+      const ok = st.answers[qi]===q.a;
+      html += `<div class="mark ${ok?'ok':'ng'}">${ok?'○ 正解':'× 不正解'}</div>`;
+      html += `<div class="exp"><b>解説：</b>${q.exp}</div>`;
+    }
+    card.innerHTML = html;
+    mainEl.appendChild(card);
+  });
+
+  const act = document.createElement('div');
+  act.className = 'actions';
+  if(!st.graded){
+    act.innerHTML = `<button class="btn btn-grade" id="gradeBtn" onclick="grade()">採点する</button>`;
+  } else {
+    act.innerHTML = `<button class="btn btn-grade" onclick="resetDay()">もう一度挑戦する</button>`;
+  }
+  mainEl.appendChild(act);
+  updateProg();
+}
+
+function updateProg(){
+  const el = document.getElementById('prog');
+  const st = state[current];
+  if(!el) return;
+  if(st.graded){ el.textContent = ''; return; }
+  el.textContent = `解答済み ${answeredCount()} / ${DAYS[current].qs.length} 問`;
+  const btn = document.getElementById('gradeBtn');
+  if(btn) btn.disabled = answeredCount() < DAYS[current].qs.length;
+}
+
+window.pick = function(qi,ci){
+  state[current].answers[qi] = ci;
+  document.querySelectorAll(`input[name="q${qi}"]`).forEach(inp=>{
+    inp.closest('.choice').classList.toggle('selected', inp.checked);
+  });
+  updateProg();
+};
+
+window.grade = function(){
+  const st = state[current];
+  const day = DAYS[current];
+  st.score = day.qs.reduce((s,q,i)=> s + (st.answers[i]===q.a ? 1:0), 0);
+  st.graded = true;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+window.resetDay = function(){
+  const day = DAYS[current];
+  state[current] = { answers: Array(day.qs.length).fill(null), order: day.qs.map(q => shuffle([...q.choices.keys()])), graded:false, score:0 };
+  render();
+  window.scrollTo({top:0});
+};
+
+render();
+</script>
+</body>
+</html>
