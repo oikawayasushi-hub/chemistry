@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有機化学 学習前 基礎確認クイズ ― 脂肪族編</title>
+<style>
+  :root {
+    --navy: #1f3864; --blue: #2e5395; --lightblue: #deeaf6;
+    --ok: #2e7d32; --ng: #c62828; --warn: #e65100;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    margin: 0; background: #f4f6fa; color: #222; line-height: 1.7;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+  header { text-align: center; margin: 24px 0 8px; }
+  header h1 { color: var(--navy); font-size: 1.5em; margin: 0 0 4px; }
+  header p { color: #666; margin: 0; font-size: .95em; }
+  .howto {
+    background: #fff; border: 1px solid #d0d8e8; border-radius: 10px;
+    padding: 16px 20px; margin: 20px 0; font-size: .95em;
+  }
+  .howto b { color: var(--navy); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 24px; justify-content: center; }
+  nav a {
+    text-decoration: none; background: var(--lightblue); color: var(--navy);
+    padding: 6px 12px; border-radius: 16px; font-size: .88em; font-weight: bold;
+  }
+  nav a:hover { background: var(--blue); color: #fff; }
+  .theme {
+    background: #fff; border: 1px solid #d0d8e8; border-radius: 12px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .theme > h2 {
+    background: var(--navy); color: #fff; margin: 0; padding: 12px 20px; font-size: 1.1em;
+  }
+  .review { padding: 8px 20px; color: #666; font-size: .88em; background: var(--lightblue); }
+  .qbody { padding: 8px 20px 20px; }
+  .q { border-bottom: 1px dashed #ccd5e5; padding: 14px 0; }
+  .q:last-of-type { border-bottom: none; }
+  .qtext { font-weight: bold; margin-bottom: 8px; }
+  .qtag { color: var(--blue); font-size: .85em; margin-right: 6px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opts label {
+    border: 1.5px solid #c3cee2; border-radius: 8px; padding: 6px 12px;
+    cursor: pointer; background: #fafbfe; font-size: .95em; user-select: none;
+  }
+  .opts input { margin-right: 6px; accent-color: var(--blue); }
+  .opts label:hover { border-color: var(--blue); }
+  .opts label.sel { border-color: var(--blue); background: var(--lightblue); }
+  .opts label.correct { border-color: var(--ok); background: #e8f5e9; }
+  .opts label.wrong { border-color: var(--ng); background: #ffebee; }
+  .exp { display: none; margin-top: 8px; font-size: .92em; border-left: 4px solid var(--blue); padding: 4px 10px; background: #f6f8fc; }
+  .exp.show { display: block; }
+  .exp .mark { font-weight: bold; }
+  .grade-area { padding: 0 20px 20px; }
+  .grade-btn {
+    background: var(--blue); color: #fff; border: none; border-radius: 8px;
+    padding: 10px 26px; font-size: 1em; font-weight: bold; cursor: pointer;
+  }
+  .grade-btn:hover { background: var(--navy); }
+  .result { margin-top: 12px; padding: 12px 16px; border-radius: 8px; display: none; font-size: .97em; }
+  .result.show { display: block; }
+  .result.lv1 { background: #e8f5e9; border: 1.5px solid var(--ok); }
+  .result.lv2 { background: #fff8e1; border: 1.5px solid var(--warn); }
+  .result.lv3 { background: #ffebee; border: 1.5px solid var(--ng); }
+  .result b { font-size: 1.1em; }
+  footer { text-align: center; color: #888; font-size: .85em; margin-top: 40px; }
+  .totalbar {
+    position: sticky; bottom: 0; background: var(--navy); color: #fff;
+    padding: 10px 16px; text-align: center; font-size: .95em; border-radius: 10px 10px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>有機化学 学習前 基礎確認クイズ</h1>
+  <p>― 脂肪族化合物編(全6テーマ・各8問)―<br>「有機化学 自学テキスト&amp;基礎ドリル 脂肪族編」別冊</p>
+</header>
+
+<div class="howto">
+  <b>使い方:</b>各テーマの学習を始める<b>直前</b>に、該当する8問を解いて「採点する」を押してください(1テーマ5分目安)。<br>
+  <b>判定基準:</b>7〜8問正解 → そのまま本編へ / 5〜6問 → 解説を読んでから本編へ / 4問以下 → 復習分野を教科書で確認してから本編へ。<br>
+  <span style="color:#666">原子量:H=1.0、C=12、O=16、Na=23、Ag=108。標準状態の気体のモル体積は 22.4 L/mol。</span>
+</div>
+
+<nav id="nav"></nav>
+<div id="themes"></div>
+
+<div class="totalbar" id="totalbar">採点済み:0 / 6 テーマ</div>
+<footer>有機化学 自学テキスト&amp;基礎ドリル 脂肪族編 ― 別冊診断クイズ(HTML版)</footer>
+</div>
+
+<script>
+const OX = ["○", "×"];
+const THEMES = [
+{
+  title: "テーマ1 炭化水素 の前に",
+  review: "復習分野:化学結合、分子式と構造式、物質量(mol)",
+  qs: [
+    { ox:1, q:"炭素原子は共有結合の手(価標)を4本もつ。", a:0, exp:"○。炭素は4本、水素は1本、酸素は2本の価標をもつ。" },
+    { q:"エタノールの「示性式」として正しいものを選べ。", o:["C<sub>2</sub>H<sub>6</sub>O","C<sub>2</sub>H<sub>5</sub>OH","CH<sub>2</sub>O","C<sub>2</sub>H<sub>4</sub>O"], a:1, exp:"示性式は官能基がわかるように書いた式。アは分子式、ウは組成式。" },
+    { q:"異性体の説明として正しいものを選べ。", o:["分子式も構造も同じ化合物どうし","分子式が同じで、構造(つながり方や立体配置)が異なる化合物どうし","構造が同じで分子式が異なる化合物どうし","同じ元素からなる単体どうし"], a:1, exp:"「分子式が同じ・構造が異なる」が異性体の定義。" },
+    { ox:1, q:"炭化水素とは、炭素原子と水素原子だけからなる化合物である。", a:0, exp:"○。CとHのみからなる化合物を炭化水素という。" },
+    { q:"C<sub>4</sub>H<sub>8</sub> の分子量はいくらか。", o:["52","54","56","58"], a:2, exp:"12×4 + 1.0×8 = 56。" },
+    { ox:1, q:"二重結合を含む炭化水素は飽和炭化水素と呼ばれる。", a:1, exp:"×。二重結合・三重結合を含むものは不飽和炭化水素。" },
+    { q:"有機化合物(C・H からなる)を完全燃焼させたとき、必ず生成する物質の組み合わせを選べ。", o:["CO と H<sub>2</sub>O","CO<sub>2</sub> と H<sub>2</sub>O","CO<sub>2</sub> と H<sub>2</sub>","C と H<sub>2</sub>O"], a:1, exp:"C → CO<sub>2</sub>、H → H<sub>2</sub>O。この2つが元素分析の基礎になる。" },
+    { q:"標準状態で 0.10 mol の気体が占める体積を選べ。", o:["1.12 L","2.24 L","11.2 L","22.4 L"], a:1, exp:"0.10 × 22.4 = 2.24 L。" },
+  ]
+},
+{
+  title: "テーマ2 アルコールとエーテル の前に",
+  review: "復習分野:官能基の概念、水素結合、酸化・還元の定義、mol計算",
+  qs: [
+    { q:"官能基の説明として正しいものを選べ。", o:["化合物の色を決める金属イオン","化合物に特有の性質を与える特定の原子団","分子の中で最も重い原子","炭素骨格の枝分かれ部分"], a:1, exp:"−OH、−CHO、−COOH などが官能基。" },
+    { ox:1, q:"ヒドロキシ基は −OH で表される。", a:0, exp:"○。" },
+    { q:"分子間に水素結合を形成する物質の沸点は、同程度の分子量で水素結合をもたない物質と比べてどうなるか。", o:["高くなる","低くなる","変わらない","必ず0℃以下になる"], a:0, exp:"水素結合を切る分だけ余分なエネルギーが必要になり、沸点が高くなる。" },
+    { q:"有機化合物の変化が「酸化」かどうかの判断について、最も適切な記述を選べ。", o:["酸素原子を含む化合物は、すべて酸化された状態にある","注目する原子(主に炭素)の酸化数が増加していれば酸化である","分子量が大きくなる変化は、すべて酸化である","水素原子を受け取る変化が酸化である"], a:1, exp:"本質は酸化数の増減(電子の授受)。高校有機で使う「O原子が増える・H原子が減る=酸化」は、炭素原子の酸化数の増加と一致する実用上の目安。例:エタノール→アセトアルデヒドでは、−OH の炭素の酸化数が −1 → +1 に増加している。" },
+    { q:"金属ナトリウムを水に入れたときに発生する気体を選べ。", o:["O<sub>2</sub>","H<sub>2</sub>","Na<sub>2</sub>O の蒸気","CO<sub>2</sub>"], a:1, exp:"2Na + 2H<sub>2</sub>O → 2NaOH + H<sub>2</sub>。アルコールとの反応でも H<sub>2</sub> が出る。" },
+    { ox:1, q:"触媒は反応の速さを変えるが、反応の前後で自身は変化しない。", a:0, exp:"○。" },
+    { q:"エタノール C<sub>2</sub>H<sub>6</sub>O(分子量 46)4.6 g の物質量を選べ。", o:["0.010 mol","0.10 mol","1.0 mol","4.6 mol"], a:1, exp:"4.6/46 = 0.10 mol。" },
+    { ox:1, q:"−OH をもつ化合物は、すべて水酸化ナトリウムのような強塩基である。", a:1, exp:"×。アルコールは中性。−OH という原子団と、電離して OH<sup>−</sup> を出す塩基は別物。" },
+  ]
+},
+{
+  title: "テーマ3 アルデヒドとケトン の前に",
+  review: "復習分野:酸化還元(電子の授受・酸化数)、テーマ2「アルコールの酸化」",
+  qs: [
+    { q:"「還元性がある」物質の説明として正しいものを選べ。", o:["相手を酸化し、自身は還元される","相手を還元し、自身は酸化される","相手も自身も還元される","酸化も還元もされない"], a:1, exp:"相手に電子を与える(相手を還元する)物質が還元剤で、自身は酸化される。" },
+    { q:"Ag<sup>+</sup> + e<sup>−</sup> → Ag の変化で、銀イオンはどうなったか。", o:["酸化された","還元された","中和された","電離した"], a:1, exp:"電子を受け取る変化は還元。銀鏡反応ではアルデヒドが Ag<sup>+</sup> を還元する。" },
+    { ox:1, q:"第一級アルコールを酸化すると、まずアルデヒドが生成する。", a:0, exp:"○。さらに酸化するとカルボン酸になる。" },
+    { q:"第二級アルコールを酸化すると生成するものを選べ。", o:["アルデヒド","カルボン酸","ケトン","エーテル"], a:2, exp:"第二級アルコール → ケトン。" },
+    { ox:1, q:"カルボニル基とは C=O の構造のことである。", a:0, exp:"○。カルボニル基 C=O を含む化合物がアルデヒド・ケトン。" },
+    { q:"Cu<sub>2</sub>O における銅の酸化数を選べ。", o:["0","+1","+2","−1"], a:1, exp:"O を −2 とすると Cu は +1。フェーリング液の還元で Cu<sup>2+</sup>(+2)が Cu<sub>2</sub>O(+1)に還元される。" },
+    { ox:1, q:"メタノールを酸化して得られるアルデヒドはアセトアルデヒドである。", a:1, exp:"×。ホルムアルデヒド HCHO。アセトアルデヒドはエタノールの酸化で生じる。" },
+    { q:"銀 0.20 mol の質量を選べ(Ag = 108)。", o:["10.8 g","21.6 g","54 g","216 g"], a:1, exp:"108 × 0.20 = 21.6 g。" },
+  ]
+},
+{
+  title: "テーマ4 カルボン酸・エステル・油脂 の前に",
+  review: "復習分野:酸・塩基と中和、弱酸の遊離、塩の液性、化学平衡、テーマ2「アルコールの価数」",
+  qs: [
+    { q:"酢酸の分類として正しいものを選べ。", o:["強酸","弱酸","強塩基","弱塩基"], a:1, exp:"電離度が小さいので弱酸。ただし炭酸よりは強い。" },
+    { ox:1, q:"弱酸の塩の水溶液に、その弱酸より強い酸を加えると、弱酸が遊離する。", a:0, exp:"○。弱酸の遊離。カルボン酸と NaHCO<sub>3</sub> の反応(CO<sub>2</sub> 発生)を理解する土台。" },
+    { q:"酸の強さの順として正しいものを選べ。", o:["炭酸 > 酢酸 > 塩酸","酢酸 > 塩酸 > 炭酸","塩酸 > 酢酸 > 炭酸","塩酸 > 炭酸 > 酢酸"], a:2, exp:"塩酸(強酸)> 酢酸 > 炭酸。「カルボン酸は炭酸より強い」がテーマ4の鍵。" },
+    { ox:1, q:"中和反応では、酸と塩基から塩と水が生じる。", a:0, exp:"○。" },
+    { q:"水酸化ナトリウム NaOH(式量 40)0.60 g の物質量を選べ。", o:["0.0015 mol","0.015 mol","0.15 mol","1.5 mol"], a:1, exp:"0.60/40 = 0.015 mol。けん化の計算で頻出のレベル。" },
+    { q:"可逆反応で、正反応と逆反応の速さが等しくなり、見かけ上反応が止まった状態を何というか。", o:["飽和状態","化学平衡の状態","臨界状態","標準状態"], a:1, exp:"エステル化⇌加水分解は可逆反応で平衡になる。" },
+    { ox:1, q:"弱酸と強塩基からなる塩の水溶液は、塩基性を示す。", a:0, exp:"○。加水分解により塩基性を示す。セッケン水が弱塩基性である理由。" },
+    { q:"グリセリン C<sub>3</sub>H<sub>5</sub>(OH)<sub>3</sub> は何価のアルコールか。", o:["1価","2価","3価","5価"], a:2, exp:"−OH を3つもつので3価。油脂はグリセリンのトリエステル。" },
+  ]
+},
+{
+  title: "テーマ5 構造決定 の前に",
+  review: "復習分野:組成式と分子式、mol計算、質量百分率、凝固点降下、有効数字",
+  qs: [
+    { q:"組成式の説明として正しいものを選べ。", o:["分子中の実際の原子数を表した式","成分元素の原子数を最も簡単な整数比で表した式","官能基だけを取り出して表した式","構造がわかるように結合を線で表した式"], a:1, exp:"例:酢酸 C<sub>2</sub>H<sub>4</sub>O<sub>2</sub> の組成式は CH<sub>2</sub>O。" },
+    { q:"CO<sub>2</sub> 44 g に含まれる炭素の質量を選べ。", o:["6.0 g","12 g","22 g","32 g"], a:1, exp:"44 g × 12/44 = 12 g。元素分析の換算そのもの。" },
+    { q:"H<sub>2</sub>O 18 g に含まれる水素の質量を選べ。", o:["1.0 g","2.0 g","9.0 g","16 g"], a:1, exp:"18 g × 2.0/18 = 2.0 g(H は2原子分)。" },
+    { ox:1, q:"元素の質量パーセントの値は、そのまま原子数の比として使ってよい。", a:1, exp:"×。各元素の質量を原子量で割って物質量(原子数)の比に直す。" },
+    { q:"C、H、O の物質量が 0.20 mol、0.40 mol、0.10 mol のとき、原子数の最簡整数比 C:H:O を選べ。", o:["1:2:1","2:4:1","4:8:1","2:2:1"], a:1, exp:"0.20:0.40:0.10 = 2:4:1。" },
+    { q:"組成式 CH<sub>2</sub>O(式量 30)で分子量 90 の化合物の分子式を選べ。", o:["CH<sub>2</sub>O","C<sub>2</sub>H<sub>4</sub>O<sub>2</sub>","C<sub>3</sub>H<sub>6</sub>O<sub>3</sub>","C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>"], a:2, exp:"90/30 = 3 なので (CH<sub>2</sub>O)×3 = C<sub>3</sub>H<sub>6</sub>O<sub>3</sub>。" },
+    { ox:1, q:"凝固点降下度は、溶液の質量モル濃度に比例する。", a:0, exp:"○。ΔT = K<sub>f</sub> × m。分子量測定に利用される。" },
+    { q:"879.6 を有効数字2桁で表したものを選べ。", o:["87","8.7×10<sup>2</sup>","8.8×10<sup>2</sup>","880.0"], a:2, exp:"上から2桁目までを四捨五入で残す。879.6 → 8.8×10<sup>2</sup>。" },
+  ]
+},
+{
+  title: "特訓テーマ 異性体の書き出し の前に",
+  review: "復習分野:異性体の分類、不斉炭素原子、シス-トランス異性体(テーマ1・5)",
+  qs: [
+    { q:"構造異性体の説明として正しいものを選べ。", o:["原子のつながり方(結合の順序)が異なる異性体","つながり方は同じで立体配置が異なる異性体","分子式が異なる化合物どうし","同位体からなる分子どうし"], a:0, exp:"つながり方が異なるのが構造異性体、同じで空間配置が異なるのが立体異性体。" },
+    { ox:1, q:"シス-トランス異性体は、構造異性体の一種である。", a:1, exp:"×。シス-トランス異性体(幾何異性体)は立体異性体の一種。" },
+    { q:"不斉炭素原子の説明として正しいものを選べ。", o:["二重結合をもつ炭素原子","4種類の互いに異なる原子または原子団が結合した炭素原子","環構造に含まれる炭素原子","水素が1つも結合していない炭素原子"], a:1, exp:"不斉炭素原子があると鏡像異性体が存在する。" },
+    { ox:1, q:"鏡像異性体どうしは、沸点や融点などの物理的性質が大きく異なる。", a:1, exp:"×。物理的性質はほぼ同じ。光学的性質(旋光性)や生理作用が異なる。" },
+    { q:"シス-トランス異性体が生じる根本的な理由を選べ。", o:["単結合が自由に回転できるから","二重結合が自由に回転できないから","炭素の価標が4本だから","水素結合が生じるから"], a:1, exp:"二重結合は回転できないため、置換基の空間配置が固定される。" },
+    { ox:1, q:"「2-メチルブタン」と「3-メチルブタン」は互いに異なる化合物である。", a:1, exp:"×。位置番号は小さい方から付けるので、どちらも 2-メチルブタン。同一化合物。" },
+    { q:"プロパン CH<sub>3</sub>CH<sub>2</sub>CH<sub>3</sub> の水素原子は、分子の対称性から何種類に区別されるか。", o:["1種類","2種類","3種類","8種類"], a:1, exp:"両端の CH<sub>3</sub> の水素(6個)と中央の CH<sub>2</sub> の水素(2個)の2種類。置換体の数え上げの基礎。" },
+    { ox:1, q:"分子式が同じであれば、必ず同じ化合物である。", a:1, exp:"×。分子式が同じでも構造が異なれば別の化合物(=異性体)。" },
+  ]
+},
+];
+
+const KANA = ["ア", "イ", "ウ", "エ"];
+const graded = new Array(THEMES.length).fill(false);
+
+const navEl = document.getElementById("nav");
+const themesEl = document.getElementById("themes");
+
+THEMES.forEach((th, ti) => {
+  const a = document.createElement("a");
+  a.href = "#theme" + ti;
+  a.textContent = th.title.replace(" の前に", "");
+  navEl.appendChild(a);
+
+  const sec = document.createElement("section");
+  sec.className = "theme";
+  sec.id = "theme" + ti;
+  let html = `<h2>${th.title}</h2><div class="review">〔${th.review}〕</div><div class="qbody">`;
+  th.qs.forEach((q, qi) => {
+    const opts = q.ox ? OX : q.o;
+    html += `<div class="q" id="q${ti}_${qi}">
+      <div class="qtext"><span class="qtag">${q.ox ? "〔○×〕" : "〔4択〕"}</span>問${qi + 1} ${q.q}</div>
+      <div class="opts">`;
+    opts.forEach((o, oi) => {
+      const lab = q.ox ? o : KANA[oi] + " " + o;
+      html += `<label data-t="${ti}" data-q="${qi}" data-o="${oi}">
+        <input type="radio" name="q${ti}_${qi}" value="${oi}">${lab}</label>`;
+    });
+    html += `</div><div class="exp" id="exp${ti}_${qi}"></div></div>`;
+  });
+  html += `</div><div class="grade-area">
+    <button class="grade-btn" onclick="grade(${ti})">このテーマを採点する</button>
+    <div class="result" id="result${ti}"></div>
+  </div>`;
+  sec.innerHTML = html;
+  themesEl.appendChild(sec);
+});
+
+// 選択時のハイライト
+document.addEventListener("change", e => {
+  if (e.target.type === "radio") {
+    const labels = e.target.closest(".opts").querySelectorAll("label");
+    labels.forEach(l => l.classList.remove("sel"));
+    e.target.closest("label").classList.add("sel");
+  }
+});
+
+function grade(ti) {
+  const th = THEMES[ti];
+  let score = 0, unanswered = 0;
+  th.qs.forEach((q, qi) => {
+    const sel = document.querySelector(`input[name="q${ti}_${qi}"]:checked`);
+    const labels = document.querySelectorAll(`#q${ti}_${qi} label`);
+    labels.forEach(l => l.classList.remove("correct", "wrong"));
+    const expEl = document.getElementById(`exp${ti}_${qi}`);
+    const correctLabel = labels[q.a];
+    if (!sel) {
+      unanswered++;
+      correctLabel.classList.add("correct");
+      expEl.innerHTML = `<span class="mark" style="color:var(--warn)">未回答</span> 正解:${q.ox ? OX[q.a] : KANA[q.a]}。${q.exp}`;
+    } else if (Number(sel.value) === q.a) {
+      score++;
+      correctLabel.classList.add("correct");
+      expEl.innerHTML = `<span class="mark" style="color:var(--ok)">正解!</span> ${q.exp}`;
+    } else {
+      labels[Number(sel.value)].classList.add("wrong");
+      correctLabel.classList.add("correct");
+      expEl.innerHTML = `<span class="mark" style="color:var(--ng)">不正解</span> 正解:${q.ox ? OX[q.a] : KANA[q.a]}。${q.exp}`;
+    }
+    expEl.classList.add("show");
+  });
+  const res = document.getElementById("result" + ti);
+  res.classList.remove("lv1", "lv2", "lv3");
+  let msg, lv;
+  if (score >= 7) { lv = "lv1"; msg = "準備OK。そのまま本編のテーマに進みましょう。"; }
+  else if (score >= 5) { lv = "lv2"; msg = "あと少し。間違えた問題の解説を理解してから本編へ進みましょう。"; }
+  else { lv = "lv3"; msg = `復習推奨。教科書で〔${th.review.replace("復習分野:", "")}〕を確認してから本編へ進みましょう。`; }
+  res.classList.add(lv, "show");
+  res.innerHTML = `<b>${score} / 8 問正解</b>${unanswered ? `(未回答 ${unanswered} 問)` : ""}<br>${msg}`;
+  graded[ti] = true;
+  document.getElementById("totalbar").textContent =
+    "採点済み:" + graded.filter(Boolean).length + " / 6 テーマ";
+  res.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+</script>
+</body>
+</html>
