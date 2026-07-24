@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理論編 事前チェック ― 入試化学 頻出テーマ完成講座</title>
+<style>
+  :root{
+    --ink:#1F3864; --ink-soft:#3D5A8F; --paper:#FDFDFB;
+    --grid:#DCE8F2; --copper:#9C5A1D; --ok:#2F7D4F; --ng:#B3402A; --line:#C9D4E4;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none !important;} }
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",Meiryo,sans-serif;
+    color:#22293A; background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:28px 28px; line-height:1.75;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 18px 90px;}
+
+  header{background:var(--ink); color:#fff; margin:26px 0 22px; padding:28px 30px 24px; border-radius:4px; position:relative;}
+  header::after{content:""; position:absolute; left:0; right:0; bottom:-8px; height:8px;
+    background:repeating-linear-gradient(90deg, var(--copper) 0 22px, transparent 22px 30px); border-radius:0 0 4px 4px;}
+  .kicker{font-size:.8rem; letter-spacing:.35em; color:#C7D4EA; margin-bottom:6px;}
+  h1{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif; font-size:1.8rem; font-weight:700; letter-spacing:.06em; line-height:1.35;}
+  header p.lead{margin-top:11px; font-size:.9rem; color:#E4EBF6;}
+  header p.lead b{color:#FFD9A8; font-weight:600;}
+
+  .tabs{position:sticky; top:0; z-index:20; background:rgba(253,253,251,.96); backdrop-filter:blur(3px);
+    margin:0 -18px 26px; padding:10px 18px; border-bottom:1px solid var(--line);
+    display:flex; gap:7px; overflow-x:auto; scrollbar-width:thin;}
+  .tab{flex:none; font-family:inherit; font-size:.86rem; font-weight:600; color:var(--ink-soft);
+    background:#fff; border:1.5px solid var(--line); border-radius:20px; padding:7px 15px; cursor:pointer;
+    white-space:nowrap; transition:all .15s;}
+  .tab:hover{border-color:var(--ink-soft);}
+  .tab:focus-visible{outline:2px solid var(--copper); outline-offset:2px;}
+  .tab.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .tab .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-left:6px; vertical-align:middle; background:#D4DCE8;}
+  .tab.active .dot{background:#7E93B8;}
+  .tab .dot.done-ok{background:var(--ok);}
+  .tab .dot.done-mid{background:var(--copper);}
+  .tab .dot.done-low{background:var(--ng);}
+
+  .day{display:none;}
+  .day.show{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .day.show{animation:none;} }
+
+  .day-head{display:flex; align-items:baseline; gap:12px; border-bottom:2px solid var(--ink); padding-bottom:7px; margin-bottom:6px;}
+  .day-head .tag{background:var(--ink); color:#fff; font-size:.78rem; font-weight:700; padding:3px 11px; border-radius:2px; letter-spacing:.06em; white-space:nowrap;}
+  .day-head h2{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif; font-size:1.15rem; color:var(--ink); font-weight:700;}
+  .day-sub{font-size:.85rem; color:#5A6478; margin-bottom:18px;}
+
+  .q{background:#fff; border:1px solid var(--line); border-radius:4px; padding:17px 20px 15px; margin-bottom:13px; position:relative;}
+  .q .qnum{font-family:"Yu Mincho",serif; font-weight:700; color:var(--copper); font-size:.92rem; letter-spacing:.05em; margin-bottom:4px;}
+  .q .stem{font-size:.97rem; margin-bottom:12px;}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  @media (max-width:560px){ .choices{grid-template-columns:1fr;} }
+  .choices label{display:flex; align-items:center; gap:9px; border:1.5px solid var(--line); border-radius:4px;
+    padding:9px 12px; cursor:pointer; font-size:.93rem; background:#fff; transition:border-color .15s, background .15s;}
+  .choices label:hover{border-color:var(--ink-soft);}
+  .choices input{accent-color:var(--ink); width:16px; height:16px; flex:none;}
+  .choices input:focus-visible{outline:2px solid var(--copper); outline-offset:2px;}
+  .choices label.sel{border-color:var(--ink); background:#F2F6FC;}
+
+  .q.correct{border-color:var(--ok);}
+  .q.wrong{border-color:var(--ng);}
+  .mark{position:absolute; top:9px; right:14px; font-family:"Yu Mincho",serif; font-weight:700; font-size:1.6rem; line-height:1; display:none;}
+  .q.correct .mark{display:block; color:var(--ok);}
+  .q.wrong .mark{display:block; color:var(--ng);}
+  .q.graded label{pointer-events:none;}
+  .q.graded label.ans{border-color:var(--ok); background:#EEF7F1;}
+  .q.graded label.miss{border-color:var(--ng); background:#FBEFEC;}
+  .expl{display:none; margin-top:11px; padding:10px 14px; background:#F6F8FC; border-left:4px solid var(--copper); font-size:.87rem; color:#3A4356; border-radius:0 3px 3px 0;}
+  .q.graded .expl{display:block;}
+  .expl b{color:var(--copper);}
+
+  .day-actions{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:22px 0 6px;}
+  button.grade{font-family:inherit; font-size:.98rem; font-weight:700; letter-spacing:.08em; color:#fff; background:var(--ink); border:none; border-radius:4px; padding:12px 40px; cursor:pointer; transition:background .15s;}
+  button.grade:hover{background:var(--ink-soft);}
+  button.grade:focus-visible{outline:3px solid var(--copper); outline-offset:2px;}
+  button.reset{font-family:inherit; font-size:.86rem; color:var(--ink); background:none; border:1.5px solid var(--ink); border-radius:4px; padding:9px 20px; cursor:pointer;}
+  .warn{font-size:.8rem; color:var(--ng); width:100%; margin-top:2px;}
+
+  .day-result{display:none; margin-top:16px; background:#fff; border:2px solid var(--ink); border-radius:4px; padding:18px 22px;}
+  .day-result.show{display:block;}
+  .day-result .rscore{font-family:"Yu Mincho",serif; color:var(--ink); font-size:1.05rem; margin-bottom:8px;}
+  .day-result .rscore b{font-size:1.9rem;}
+  .day-result .rmsg{font-size:.9rem; color:#3A4356; margin-bottom:12px;}
+  .day-result .review{padding:11px 15px; background:#FBF6EE; border-left:4px solid var(--copper); font-size:.87rem; border-radius:0 3px 3px 0;}
+  .day-result .review b{color:var(--copper);}
+  .nextbtn{display:inline-block; margin-top:14px; font-family:inherit; font-size:.9rem; font-weight:600; color:#fff; background:var(--copper); border:none; border-radius:4px; padding:10px 22px; cursor:pointer;}
+  .nextbtn:hover{background:#83480f;}
+
+  footer{margin-top:40px; text-align:center; font-size:.78rem; color:#8A93A5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">入試化学 頻出テーマ完成講座 理論編</div>
+  <h1>各日 事前チェック(1日5問)</h1>
+  <p class="lead">各日の講習に入る前に、その日に必要な基礎事項を確認するテストです。上のタブで日を選び、5問を解いて<b>「この日を採点」</b>を押してください。</p>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="日を選択"></nav>
+
+<form id="quiz">
+
+<!-- ============ 第1日 ============ -->
+<section class="day" data-day="1">
+  <div class="day-head"><span class="tag">第1日の準備</span><h2>反応速度に向けて</h2></div>
+  <div class="day-sub">物質量・モル濃度・反応式の量的関係・速度と触媒の基礎</div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問1</div>
+    <div class="stem">0.50 mol/L のグルコース水溶液 200 mL に含まれるグルコースの物質量はいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q1_1" value="0">0.025 mol</label>
+      <label><input type="radio" name="q1_1" value="1">0.050 mol</label>
+      <label><input type="radio" name="q1_1" value="2">0.10 mol</label>
+      <label><input type="radio" name="q1_1" value="3">1.0 mol</label>
+    </div>
+    <div class="expl"><b>解説</b> n = 濃度×体積(L) = 0.50 × 0.200 = 0.10 mol。反応速度の計算はすべて濃度から始まる。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問2</div>
+    <div class="stem">過酸化水素の分解 2H₂O₂ → 2H₂O + O₂ で、H₂O₂ が 0.40 mol 分解したとき発生する O₂ は何 mol か。</div>
+    <div class="choices">
+      <label><input type="radio" name="q1_2" value="0">0.10 mol</label>
+      <label><input type="radio" name="q1_2" value="1">0.20 mol</label>
+      <label><input type="radio" name="q1_2" value="2">0.40 mol</label>
+      <label><input type="radio" name="q1_2" value="3">0.80 mol</label>
+    </div>
+    <div class="expl"><b>解説</b> 係数比 H₂O₂:O₂ = 2:1 より 0.40 × 1/2 = 0.20 mol。第1日 例題1で使う。</div>
+  </div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問3</div>
+    <div class="stem">反応速度 v = −Δ[A]/Δt について正しいものはどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q1_3" value="0">単位時間あたりの濃度変化を表す</label>
+      <label><input type="radio" name="q1_3" value="1">反応で発生する熱量を表す</label>
+      <label><input type="radio" name="q1_3" value="2">つねに一定で変化しない</label>
+      <label><input type="radio" name="q1_3" value="3">生成物の総量を表す</label>
+    </div>
+    <div class="expl"><b>解説</b> 反応速度は単位時間あたりの濃度の変化量。着目する物質によって値が変わる点も第1日で確認する。</div>
+  </div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問4</div>
+    <div class="stem">触媒の説明として最も適切なものはどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q1_4" value="0">反応で発生する熱量を大きくする</label>
+      <label><input type="radio" name="q1_4" value="1">生成物の量そのものを増やす</label>
+      <label><input type="radio" name="q1_4" value="2">自身は変化せず反応の速さを大きくする</label>
+      <label><input type="radio" name="q1_4" value="3">反応を高温でしか進まなくする</label>
+    </div>
+    <div class="expl"><b>解説</b> 触媒は前後で自身が変化せず速度を大きくする。「なぜ速くなるか(活性化エネルギー)」を第1日で扱う。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問5</div>
+    <div class="stem">一般に、化学反応の速さは温度が高いほどどうなるか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q1_5" value="0">遅くなる</label>
+      <label><input type="radio" name="q1_5" value="1">速くなる</label>
+      <label><input type="radio" name="q1_5" value="2">変わらない</label>
+      <label><input type="radio" name="q1_5" value="3">必ず半分になる</label>
+    </div>
+    <div class="expl"><b>解説</b> 温度が高いほど速い。理由(活性化エネルギー以上の分子の割合が増える)を第1日で言語化する。</div>
+  </div>
+
+  <div class="day-actions">
+    <button type="button" class="grade" data-target="1">この日を採点</button>
+    <button type="button" class="reset" data-target="1" style="display:none;">解き直す</button>
+    <div class="warn" data-warn="1"></div>
+  </div>
+  <div class="day-result" data-result="1"></div>
+</section>
+
+<!-- ============ 第2日 ============ -->
+<section class="day" data-day="2">
+  <div class="day-head"><span class="tag">第2日の準備</span><h2>化学平衡(気相平衡)に向けて</h2></div>
+  <div class="day-sub">気体の状態方程式・分圧・平衡状態の意味</div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問1</div>
+    <div class="stem">27 ℃、8.3×10⁴ Pa で 3.0 L を占める気体の物質量はいくらか。R = 8.3×10³ Pa・L/(K・mol)。</div>
+    <div class="choices">
+      <label><input type="radio" name="q2_1" value="0">0.010 mol</label>
+      <label><input type="radio" name="q2_1" value="1">0.10 mol</label>
+      <label><input type="radio" name="q2_1" value="2">1.0 mol</label>
+      <label><input type="radio" name="q2_1" value="3">10 mol</label>
+    </div>
+    <div class="expl"><b>解説</b> n = PV/RT = (8.3×10⁴×3.0)/(8.3×10³×300) = 0.10 mol。温度は絶対温度(300 K)に直す。</div>
+  </div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問2</div>
+    <div class="stem">物質量の比が N₂:O₂ = 4:1 の混合気体の全圧が 1.0×10⁵ Pa のとき、O₂ の分圧はいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q2_2" value="0">2.0×10⁴ Pa</label>
+      <label><input type="radio" name="q2_2" value="1">2.5×10⁴ Pa</label>
+      <label><input type="radio" name="q2_2" value="2">5.0×10⁴ Pa</label>
+      <label><input type="radio" name="q2_2" value="3">8.0×10⁴ Pa</label>
+    </div>
+    <div class="expl"><b>解説</b> 分圧 = 全圧 × モル分率 = 1.0×10⁵ × 1/5 = 2.0×10⁴ Pa。圧平衡定数 Kp は分圧で組む。</div>
+  </div>
+
+  <div class="q" data-ans="3">
+    <div class="qnum">問3</div>
+    <div class="stem">可逆反応が「平衡状態」にあるときの説明として正しいものはどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q2_3" value="0">正反応も逆反応も完全に停止している</label>
+      <label><input type="radio" name="q2_3" value="1">反応物がすべて生成物に変化し終わっている</label>
+      <label><input type="radio" name="q2_3" value="2">正反応の速さが逆反応より常に大きい</label>
+      <label><input type="radio" name="q2_3" value="3">正反応と逆反応の速さが等しく見かけ上止まっている</label>
+    </div>
+    <div class="expl"><b>解説</b> 平衡は止まった状態ではなく、正逆の速さがつり合った動的状態。第2日全体の前提。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問4</div>
+    <div class="stem">27 ℃は絶対温度で何 K か。</div>
+    <div class="choices">
+      <label><input type="radio" name="q2_4" value="0">246 K</label>
+      <label><input type="radio" name="q2_4" value="1">300 K</label>
+      <label><input type="radio" name="q2_4" value="2">273 K</label>
+      <label><input type="radio" name="q2_4" value="3">327 K</label>
+    </div>
+    <div class="expl"><b>解説</b> T(K) = t(℃) + 273 = 300 K。状態方程式では必ず絶対温度を使う。</div>
+  </div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問5</div>
+    <div class="stem">気体分子 N₂O₄ の一部が 2NO₂ に分かれると、気体全体の総物質量はどうなるか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q2_5" value="0">減る</label>
+      <label><input type="radio" name="q2_5" value="1">変わらない</label>
+      <label><input type="radio" name="q2_5" value="2">増える</label>
+      <label><input type="radio" name="q2_5" value="3">半分になる</label>
+    </div>
+    <div class="expl"><b>解説</b> 1分子から2分子ができるので総物質量は増える。解離度 α と平均分子量の計算(第2日)の基礎。</div>
+  </div>
+
+  <div class="day-actions">
+    <button type="button" class="grade" data-target="2">この日を採点</button>
+    <button type="button" class="reset" data-target="2" style="display:none;">解き直す</button>
+    <div class="warn" data-warn="2"></div>
+  </div>
+  <div class="day-result" data-result="2"></div>
+</section>
+
+<!-- ============ 第3日 ============ -->
+<section class="day" data-day="3">
+  <div class="day-head"><span class="tag">第3日の準備</span><h2>酸・塩基の電離平衡に向けて</h2></div>
+  <div class="day-sub">pH の定義・強酸と弱酸・log 計算</div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問1</div>
+    <div class="stem">[H⁺] = 1.0×10⁻³ mol/L の水溶液の pH はいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q3_1" value="0">2</label>
+      <label><input type="radio" name="q3_1" value="1">3</label>
+      <label><input type="radio" name="q3_1" value="2">10</label>
+      <label><input type="radio" name="q3_1" value="3">11</label>
+    </div>
+    <div class="expl"><b>解説</b> pH = −log₁₀[H⁺] = −log(10⁻³) = 3。定義を即答できるように。</div>
+  </div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問2</div>
+    <div class="stem">次の酸のうち、水溶液中で一部しか電離しない「弱酸」はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q3_2" value="0">塩酸 HCl</label>
+      <label><input type="radio" name="q3_2" value="1">硝酸 HNO₃</label>
+      <label><input type="radio" name="q3_2" value="2">酢酸 CH₃COOH</label>
+      <label><input type="radio" name="q3_2" value="3">硫酸 H₂SO₄</label>
+    </div>
+    <div class="expl"><b>解説</b> 酢酸は弱酸。強酸=そのまま pH、弱酸=電離平衡で近似、という使い分けが第3日の主役。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問3</div>
+    <div class="stem">[H⁺] = 2.0×10⁻⁴ mol/L の水溶液の pH はいくらか。log₁₀2 = 0.30。</div>
+    <div class="choices">
+      <label><input type="radio" name="q3_3" value="0">3.4</label>
+      <label><input type="radio" name="q3_3" value="1">3.7</label>
+      <label><input type="radio" name="q3_3" value="2">4.3</label>
+      <label><input type="radio" name="q3_3" value="3">4.7</label>
+    </div>
+    <div class="expl"><b>解説</b> pH = −log(2.0×10⁻⁴) = 4 − log2 = 4 − 0.30 = 3.7。「a×10⁻ⁿ → n − log a」の形。</div>
+  </div>
+
+  <div class="q" data-ans="3">
+    <div class="qnum">問4</div>
+    <div class="stem">log₁₀2 = 0.30 のとき、log₁₀8 の値はいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q3_4" value="0">0.30</label>
+      <label><input type="radio" name="q3_4" value="1">0.60</label>
+      <label><input type="radio" name="q3_4" value="2">0.80</label>
+      <label><input type="radio" name="q3_4" value="3">0.90</label>
+    </div>
+    <div class="expl"><b>解説</b> log8 = log2³ = 3×log2 = 0.90。対数法則(積は和・累乗は積)は pH 計算で必須。</div>
+  </div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問5</div>
+    <div class="stem">水のイオン積 Kw = [H⁺][OH⁻] = 1.0×10⁻¹⁴ (mol/L)² のとき、[OH⁻] = 1.0×10⁻² mol/L の水溶液の [H⁺] はいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q3_5" value="0">1.0×10⁻¹² mol/L</label>
+      <label><input type="radio" name="q3_5" value="1">1.0×10⁻⁷ mol/L</label>
+      <label><input type="radio" name="q3_5" value="2">1.0×10⁻² mol/L</label>
+      <label><input type="radio" name="q3_5" value="3">1.0×10⁻¹⁶ mol/L</label>
+    </div>
+    <div class="expl"><b>解説</b> [H⁺] = Kw/[OH⁻] = 10⁻¹⁴/10⁻² = 10⁻¹² mol/L。塩基性溶液の pH や加水分解の計算で使う。</div>
+  </div>
+
+  <div class="day-actions">
+    <button type="button" class="grade" data-target="3">この日を採点</button>
+    <button type="button" class="reset" data-target="3" style="display:none;">解き直す</button>
+    <div class="warn" data-warn="3"></div>
+  </div>
+  <div class="day-result" data-result="3"></div>
+</section>
+
+<!-- ============ 第4日 ============ -->
+<section class="day" data-day="4">
+  <div class="day-head"><span class="tag">第4日の準備</span><h2>中和滴定・溶解度積に向けて</h2></div>
+  <div class="day-sub">中和の量的関係(価数)・実験器具・塩の液性</div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問1</div>
+    <div class="stem">0.10 mol/L の硫酸 H₂SO₄ 10 mL をちょうど中和するのに必要な 0.10 mol/L 水酸化ナトリウム水溶液は何 mL か。</div>
+    <div class="choices">
+      <label><input type="radio" name="q4_1" value="0">5.0 mL</label>
+      <label><input type="radio" name="q4_1" value="1">10 mL</label>
+      <label><input type="radio" name="q4_1" value="2">20 mL</label>
+      <label><input type="radio" name="q4_1" value="3">40 mL</label>
+    </div>
+    <div class="expl"><b>解説</b> H⁺ = 2×0.10×10 = OH⁻ = 1×0.10×V より V = 20 mL。<b>価数のかけ忘れ</b>が最頻出ミス。</div>
+  </div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問2</div>
+    <div class="stem">一定体積の溶液を正確にはかり取るために用いる器具はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q4_2" value="0">ホールピペット</label>
+      <label><input type="radio" name="q4_2" value="1">メスシリンダー</label>
+      <label><input type="radio" name="q4_2" value="2">ビーカー</label>
+      <label><input type="radio" name="q4_2" value="3">三角フラスコ</label>
+    </div>
+    <div class="expl"><b>解説</b> 一定体積を正確に取る=ホールピペット。滴下量=ビュレット、一定濃度の調製=メスフラスコ。第4日で共洗いの可否まで扱う。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問3</div>
+    <div class="stem">次の塩のうち、水溶液が塩基性を示すものはどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q4_3" value="0">塩化ナトリウム NaCl</label>
+      <label><input type="radio" name="q4_3" value="1">酢酸ナトリウム CH₃COONa</label>
+      <label><input type="radio" name="q4_3" value="2">塩化アンモニウム NH₄Cl</label>
+      <label><input type="radio" name="q4_3" value="3">硝酸カリウム KNO₃</label>
+    </div>
+    <div class="expl"><b>解説</b> 弱酸+強塩基の塩は塩基性(加水分解)。NH₄Cl は酸性、NaCl・KNO₃ は中性。指示薬選択の前提。</div>
+  </div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問4</div>
+    <div class="stem">弱酸を強塩基で滴定するとき、中和点付近の変色に適する指示薬はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q4_4" value="0">メチルオレンジ</label>
+      <label><input type="radio" name="q4_4" value="1">メチルレッド</label>
+      <label><input type="radio" name="q4_4" value="2">フェノールフタレイン</label>
+      <label><input type="radio" name="q4_4" value="3">リトマス</label>
+    </div>
+    <div class="expl"><b>解説</b> 弱酸×強塩基の中和点は塩基性なので、塩基性側に変色域をもつフェノールフタレインが適する。二段滴定(第4日 例題7)の核心。</div>
+  </div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問5</div>
+    <div class="stem">難溶性の塩化銀が水にわずかに溶けて AgCl ⇌ Ag⁺ + Cl⁻ の平衡にあるとき、溶解度積 Ksp を表す式はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q4_5" value="0">Ksp = [Ag⁺][Cl⁻]</label>
+      <label><input type="radio" name="q4_5" value="1">Ksp = [Ag⁺]/[Cl⁻]</label>
+      <label><input type="radio" name="q4_5" value="2">Ksp = [Ag⁺]+[Cl⁻]</label>
+      <label><input type="radio" name="q4_5" value="3">Ksp = [AgCl]</label>
+    </div>
+    <div class="expl"><b>解説</b> 溶解度積はイオン濃度の積。固体 AgCl は式に含めない。第4日でモール法・沈殿生成の判定に使う。</div>
+  </div>
+
+  <div class="day-actions">
+    <button type="button" class="grade" data-target="4">この日を採点</button>
+    <button type="button" class="reset" data-target="4" style="display:none;">解き直す</button>
+    <div class="warn" data-warn="4"></div>
+  </div>
+  <div class="day-result" data-result="4"></div>
+</section>
+
+<!-- ============ 第5日 ============ -->
+<section class="day" data-day="5">
+  <div class="day-head"><span class="tag">第5日の準備</span><h2>反応エンタルピーに向けて</h2></div>
+  <div class="day-sub">熱の出入り・ΔH の符号・状態変化・単体の約束</div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問1</div>
+    <div class="stem">発熱反応のエンタルピー変化 ΔH の符号はどちらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q5_1" value="0">負(ΔH &lt; 0)</label>
+      <label><input type="radio" name="q5_1" value="1">正(ΔH &gt; 0)</label>
+      <label><input type="radio" name="q5_1" value="2">常に 0</label>
+      <label><input type="radio" name="q5_1" value="3">反応で決まらない</label>
+    </div>
+    <div class="expl"><b>解説</b> 熱を放出すると系のエンタルピーは下がり ΔH &lt; 0。旧課程の熱化学方程式と符号が逆。</div>
+  </div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問2</div>
+    <div class="stem">次の状態変化のうち、吸熱変化はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q5_2" value="0">水蒸気が水になる(凝縮)</label>
+      <label><input type="radio" name="q5_2" value="1">水が氷になる(凝固)</label>
+      <label><input type="radio" name="q5_2" value="2">水が水蒸気になる(蒸発)</label>
+      <label><input type="radio" name="q5_2" value="3">水蒸気が直接氷になる(昇華)</label>
+    </div>
+    <div class="expl"><b>解説</b> 蒸発は熱を吸収する。「H₂O(液)とH₂O(気)で発生熱量が違う」(第5日 例題9)に直結。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問3</div>
+    <div class="stem">生成エンタルピーが 0 kJ/mol と定義されている物質はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q5_3" value="0">二酸化炭素 CO₂(気)</label>
+      <label><input type="radio" name="q5_3" value="1">酸素 O₂(気)</label>
+      <label><input type="radio" name="q5_3" value="2">水 H₂O(液)</label>
+      <label><input type="radio" name="q5_3" value="3">アンモニア NH₃(気)</label>
+    </div>
+    <div class="expl"><b>解説</b> 生成エンタルピーは「単体からつくるときの ΔH」なので、単体(O₂ など)は 0。ヘスの法則で必ず使う。</div>
+  </div>
+
+  <div class="q" data-ans="3">
+    <div class="qnum">問4</div>
+    <div class="stem">ヘスの法則(総熱量保存の法則)の内容として正しいものはどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q5_4" value="0">反応熱は温度に比例する</label>
+      <label><input type="radio" name="q5_4" value="1">反応熱は圧力に比例する</label>
+      <label><input type="radio" name="q5_4" value="2">反応熱はいつも 0 である</label>
+      <label><input type="radio" name="q5_4" value="3">反応の経路によらず、全体の反応エンタルピーは一定である</label>
+    </div>
+    <div class="expl"><b>解説</b> 反応の経路に関係なく、始めと終わりの状態が同じなら ΔH の総和は等しい。エンタルピー計算の根拠。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問5</div>
+    <div class="stem">結合エネルギーとは何か。最も適切なものを選べ。</div>
+    <div class="choices">
+      <label><input type="radio" name="q5_5" value="0">結合をつくるときに吸収するエネルギー</label>
+      <label><input type="radio" name="q5_5" value="1">気体分子内の結合1 molを切るのに必要なエネルギー</label>
+      <label><input type="radio" name="q5_5" value="2">固体を液体にするのに必要なエネルギー</label>
+      <label><input type="radio" name="q5_5" value="3">イオンを水和させるときに放出するエネルギー</label>
+    </div>
+    <div class="expl"><b>解説</b> 結合エネルギーは気体分子の共有結合1 molを切断するのに要するエネルギー(吸熱)。第5日 例題9で使う。</div>
+  </div>
+
+  <div class="day-actions">
+    <button type="button" class="grade" data-target="5">この日を採点</button>
+    <button type="button" class="reset" data-target="5" style="display:none;">解き直す</button>
+    <div class="warn" data-warn="5"></div>
+  </div>
+  <div class="day-result" data-result="5"></div>
+</section>
+
+<!-- ============ 第6日 ============ -->
+<section class="day" data-day="6">
+  <div class="day-head"><span class="tag">第6日の準備</span><h2>電池・電気分解に向けて</h2></div>
+  <div class="day-sub">酸化還元の定義・イオン化傾向・電気量の計算</div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問1</div>
+    <div class="stem">原子やイオンが「電子を失う」変化を何というか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q6_1" value="0">酸化</label>
+      <label><input type="radio" name="q6_1" value="1">還元</label>
+      <label><input type="radio" name="q6_1" value="2">中和</label>
+      <label><input type="radio" name="q6_1" value="3">電離</label>
+    </div>
+    <div class="expl"><b>解説</b> 電子を失う=酸化、受け取る=還元。電池は負極で酸化、電気分解は陽極で酸化。第6日の軸。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問2</div>
+    <div class="stem">亜鉛と銅で電池をつくったとき、負極になるのはどちらか。理由として正しい組み合わせを選べ。</div>
+    <div class="choices">
+      <label><input type="radio" name="q6_2" value="0">銅 ― イオン化傾向が大きいから</label>
+      <label><input type="radio" name="q6_2" value="1">亜鉛 ― イオン化傾向が大きいから</label>
+      <label><input type="radio" name="q6_2" value="2">亜鉛 ― イオン化傾向が小さいから</label>
+      <label><input type="radio" name="q6_2" value="3">銅 ― イオン化傾向が小さいから</label>
+    </div>
+    <div class="expl"><b>解説</b> イオン化傾向 Zn &gt; Cu。イオンになりやすい亜鉛が酸化されて電子を放出する側=負極。</div>
+  </div>
+
+  <div class="q" data-ans="2">
+    <div class="qnum">問3</div>
+    <div class="stem">2.0 A の電流を 965 秒間流したときの電気量はいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q6_3" value="0">4.8×10² C</label>
+      <label><input type="radio" name="q6_3" value="1">9.7×10² C</label>
+      <label><input type="radio" name="q6_3" value="2">1.9×10³ C</label>
+      <label><input type="radio" name="q6_3" value="3">1.9×10⁵ C</label>
+    </div>
+    <div class="expl"><b>解説</b> Q = it = 2.0×965 = 1930 ≒ 1.9×10³ C。これをファラデー定数で割って e⁻ の mol にするのが第6日の出発点。</div>
+  </div>
+
+  <div class="q" data-ans="0">
+    <div class="qnum">問4</div>
+    <div class="stem">電子 1 mol あたりの電気量(ファラデー定数)はおよそいくらか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q6_4" value="0">9.65×10⁴ C/mol</label>
+      <label><input type="radio" name="q6_4" value="1">6.02×10²³ C/mol</label>
+      <label><input type="radio" name="q6_4" value="2">8.31 C/mol</label>
+      <label><input type="radio" name="q6_4" value="3">22.4 C/mol</label>
+    </div>
+    <div class="expl"><b>解説</b> F ≒ 9.65×10⁴ C/mol。n(e⁻) = Q/F で電子の物質量を出すのが電気分解計算の基本。</div>
+  </div>
+
+  <div class="q" data-ans="1">
+    <div class="qnum">問5</div>
+    <div class="stem">硝酸銀水溶液を電気分解したとき、陰極で銀 Ag が析出する反応はどれか。</div>
+    <div class="choices">
+      <label><input type="radio" name="q6_5" value="0">Ag → Ag⁺ + e⁻</label>
+      <label><input type="radio" name="q6_5" value="1">Ag⁺ + e⁻ → Ag</label>
+      <label><input type="radio" name="q6_5" value="2">2H₂O → O₂ + 4H⁺ + 4e⁻</label>
+      <label><input type="radio" name="q6_5" value="3">2Cl⁻ → Cl₂ + 2e⁻</label>
+    </div>
+    <div class="expl"><b>解説</b> 陰極では還元が起こり、Ag⁺ が電子を受け取って析出する。e⁻ を受け取る(還元)=陰極。</div>
+  </div>
+
+  <div class="day-actions">
+    <button type="button" class="grade" data-target="6">この日を採点</button>
+    <button type="button" class="reset" data-target="6" style="display:none;">解き直す</button>
+    <div class="warn" data-warn="6"></div>
+  </div>
+  <div class="day-result" data-result="6"></div>
+</section>
+
+</form>
+<footer>入試化学 頻出テーマ完成講座 理論編 ― 各日事前チェック(全6日 × 5問)</footer>
+</div>
+
+<script>
+(function(){
+  var meta = {
+    1:{name:'第1日 反応速度', tip:'物質量・モル濃度・化学反応式の係数比(教科書「物質量と化学反応式」)'},
+    2:{name:'第2日 化学平衡', tip:'気体の状態方程式 PV=nRT と分圧・絶対温度(教科書「気体の性質」)'},
+    3:{name:'第3日 電離平衡', tip:'pH の定義・強酸と弱酸・対数計算(教科書「酸と塩基」)'},
+    4:{name:'第4日 滴定・溶解度積', tip:'中和の量的関係(価数)・器具・塩の液性(教科書「中和反応と塩」)'},
+    5:{name:'第5日 反応エンタルピー', tip:'発熱吸熱と状態変化・単体の約束(教科書「化学反応と熱」)'},
+    6:{name:'第6日 電池・電気分解', tip:'酸化還元の定義・イオン化傾向・電気量(教科書「酸化還元反応」)'}
+  };
+  var tabs = document.getElementById('tabs');
+  var sections = {};
+  document.querySelectorAll('section.day').forEach(function(s){ sections[s.dataset.day] = s; });
+
+  for(var d=1; d<=6; d++){
+    var b = document.createElement('button');
+    b.type='button'; b.className='tab'; b.dataset.day=d;
+    b.innerHTML = '第'+d+'日<span class="dot" data-tabdot="'+d+'"></span>';
+    b.addEventListener('click', function(){ showDay(this.dataset.day); });
+    tabs.appendChild(b);
+  }
+
+  function showDay(d){
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.day===String(d)); });
+    document.querySelectorAll('section.day').forEach(function(s){ s.classList.toggle('show', s.dataset.day===String(d)); });
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+  showDay(1);
+
+  document.getElementById('quiz').addEventListener('change', function(e){
+    var q = e.target.closest('.q'); if(!q) return;
+    q.querySelectorAll('label').forEach(function(l){ l.classList.toggle('sel', l.querySelector('input').checked); });
+  });
+
+  function questionsOf(day){ return Array.prototype.slice.call(sections[day].querySelectorAll('.q')); }
+
+  document.querySelectorAll('button.grade').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var day = this.dataset.target;
+      var qs = questionsOf(day);
+      var warn = sections[day].querySelector('[data-warn="'+day+'"]');
+      var answered = qs.filter(function(q){ return q.querySelector('input:checked'); }).length;
+      if(answered < qs.length){
+        warn.textContent = '未解答が '+(qs.length-answered)+' 問あります。もう一度「この日を採点」を押すと、未解答を不正解として採点します。';
+        if(!this.dataset.ok){ this.dataset.ok='1'; return; }
+      }
+      warn.textContent=''; this.dataset.ok='';
+
+      var score = 0;
+      qs.forEach(function(q){
+        var ans = q.dataset.ans;
+        var sel = q.querySelector('input:checked');
+        q.querySelectorAll('label').forEach(function(l,i){ if(String(i)===ans) l.classList.add('ans'); });
+        var ok = sel && sel.value === ans;
+        if(ok){ score++; q.classList.add('correct'); }
+        else{ q.classList.add('wrong'); if(sel) sel.closest('label').classList.add('miss'); }
+        q.classList.add('graded');
+        var mk = q.querySelector('.mark');
+        if(!mk){ mk=document.createElement('div'); mk.className='mark'; q.appendChild(mk); }
+        mk.textContent = ok ? '○' : '✕';
+      });
+
+      var pct = Math.round(score/qs.length*100);
+      var msg;
+      if(score===qs.length) msg='全問正解。この日は準備万全です。';
+      else if(score>=4) msg='ほぼ大丈夫です。誤答の1問だけ確認しておきましょう。';
+      else if(score>=3) msg='あと一歩。下の復習事項に目を通してから講習に臨みましょう。';
+      else msg='基礎に穴があります。講習前に必ず下の単元を復習してください。';
+
+      var res = sections[day].querySelector('[data-result="'+day+'"]');
+      var reviewHtml = (score===qs.length)
+        ? '<div class="review"><b>復習事項:</b>なし。この日の前提知識は身についています。</div>'
+        : '<div class="review"><b>講習前に復習:</b>'+meta[day].tip+'</div>';
+      var nextHtml = (Number(day) < 6)
+        ? '<button type="button" class="nextbtn" data-next="'+(Number(day)+1)+'">第'+(Number(day)+1)+'日のチェックへ →</button>'
+        : '';
+      res.innerHTML = '<div class="rscore"><b>'+score+'</b> / '+qs.length+' 問正解</div>'
+        + '<div class="rmsg">'+msg+'</div>' + reviewHtml + nextHtml;
+      res.classList.add('show');
+      sections[day].querySelector('button.reset[data-target="'+day+'"]').style.display='inline-block';
+
+      var dot = document.querySelector('[data-tabdot="'+day+'"]');
+      dot.className = 'dot ' + (pct===100?'done-ok':(pct>=60?'done-mid':'done-low'));
+
+      res.scrollIntoView({behavior:'smooth', block:'nearest'});
+      res.querySelectorAll('[data-next]').forEach(function(nb){
+        nb.addEventListener('click', function(){ showDay(this.dataset.next); });
+      });
+    });
+  });
+
+  document.querySelectorAll('button.reset').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var day = this.dataset.target;
+      questionsOf(day).forEach(function(q){
+        q.classList.remove('graded','correct','wrong');
+        q.querySelectorAll('input').forEach(function(r){ r.checked=false; });
+        q.querySelectorAll('label').forEach(function(l){ l.classList.remove('ans','miss','sel'); });
+        var mk=q.querySelector('.mark'); if(mk) mk.remove();
+      });
+      var res = sections[day].querySelector('[data-result="'+day+'"]');
+      res.classList.remove('show'); res.innerHTML='';
+      this.style.display='none';
+      sections[day].querySelector('button.grade[data-target="'+day+'"]').dataset.ok='';
+      sections[day].querySelector('[data-warn="'+day+'"]').textContent='';
+      var dot=document.querySelector('[data-tabdot="'+day+'"]'); dot.className='dot';
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
