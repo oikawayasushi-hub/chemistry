@@ -44,6 +44,8 @@ h3{font-size:14px;color:var(--ink);margin:16px 0 8px}
 .pct{width:44px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--tx2);flex:none;font-weight:700}
 .hud{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .chip{font-size:11.5px;background:var(--y-soft);color:var(--ink);border-radius:20px;padding:4px 11px;font-weight:800}
+.backbtn{font-size:11.5px;font-family:inherit;font-weight:800;color:var(--ink);background:#fff;border:1.5px solid var(--y2);border-radius:20px;padding:3.5px 12px;cursor:pointer}
+.backbtn:active{background:var(--y-soft)}
 .chip.combo{background:linear-gradient(135deg,#ffc21a,#f76707);color:#fff}
 .chip.fire{animation:pulse .5s ease}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.16)}100%{transform:scale(1)}}
@@ -1128,6 +1130,17 @@ function startSet(si){
   askDrill();
 }
 
+/* 途中でメニューに戻る。解答済みの分は1問ごとに保存済みなので失われない */
+function quitDrill(){
+  if(S && S.log.length && !confirm("ここまでの解答（"+S.log.length+"問）は記録されます。メニューに戻りますか？")) return;
+  home();
+}
+function quitSim(){
+  const done = S.ans.filter(a=>a>=0).length;
+  if(done && !confirm("採点せずに中断します。この模試の得点は記録されません。よろしいですか？")) return;
+  clearTick(); home();
+}
+
 function askDrill(){
   if(S.i >= S.qs.length) return resultDrill();
   const q = S.qs[S.i];
@@ -1139,6 +1152,7 @@ function askDrill(){
   app.innerHTML = `
   <div class="card">
     <div class="hud">
+      <button class="backbtn" onclick="quitDrill()">← メニュー</button>
       <span class="chip">${title}</span>
       <span class="chip">${S.i+1} / ${S.qs.length}問</span>
       <span class="chip">正解 ${S.ok}</span>
@@ -1254,6 +1268,7 @@ function simTimer(){
 function simHud(){
   const done = S.ans.filter(a=>a>=0).length;
   return `<div class="hud">
+    <button class="backbtn" onclick="quitSim()">← 中断</button>
     <span class="chip">${S.items[S.i].sec===1?"第1問（各3点）":"第2問（各4点）"}</span>
     <span class="chip">${S.i+1} / ${S.items.length}</span>
     <span class="chip">解答済 ${done}</span>
@@ -1304,6 +1319,7 @@ function simList(){
   app.innerHTML = `
   <div class="card">
     <div class="hud">
+      <button class="backbtn" onclick="quitSim()">← 中断</button>
       <span class="chip">解答一覧</span>
       <span class="chip">未解答 ${un}</span>
       <span class="chip">🚩 ${fl}</span>
