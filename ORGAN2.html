@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>有機化学 学習前 基礎確認クイズ ― 芳香族編</title>
+<style>
+  :root {
+    --navy: #1f3864; --blue: #2e5395; --lightblue: #deeaf6;
+    --ok: #2e7d32; --ng: #c62828; --warn: #e65100;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    margin: 0; background: #f4f6fa; color: #222; line-height: 1.7;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+  header { text-align: center; margin: 24px 0 8px; }
+  header h1 { color: var(--navy); font-size: 1.5em; margin: 0 0 4px; }
+  header p { color: #666; margin: 0; font-size: .95em; }
+  .howto {
+    background: #fff; border: 1px solid #d0d8e8; border-radius: 10px;
+    padding: 16px 20px; margin: 20px 0; font-size: .95em;
+  }
+  .howto b { color: var(--navy); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 24px; justify-content: center; }
+  nav a {
+    text-decoration: none; background: var(--lightblue); color: var(--navy);
+    padding: 6px 12px; border-radius: 16px; font-size: .88em; font-weight: bold;
+  }
+  nav a:hover { background: var(--blue); color: #fff; }
+  .theme {
+    background: #fff; border: 1px solid #d0d8e8; border-radius: 12px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .theme > h2 {
+    background: var(--navy); color: #fff; margin: 0; padding: 12px 20px; font-size: 1.1em;
+  }
+  .review { padding: 8px 20px; color: #666; font-size: .88em; background: var(--lightblue); }
+  .qbody { padding: 8px 20px 20px; }
+  .q { border-bottom: 1px dashed #ccd5e5; padding: 14px 0; }
+  .q:last-of-type { border-bottom: none; }
+  .qtext { font-weight: bold; margin-bottom: 8px; }
+  .qtag { color: var(--blue); font-size: .85em; margin-right: 6px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opts label {
+    border: 1.5px solid #c3cee2; border-radius: 8px; padding: 6px 12px;
+    cursor: pointer; background: #fafbfe; font-size: .95em; user-select: none;
+  }
+  .opts input { margin-right: 6px; accent-color: var(--blue); }
+  .opts label:hover { border-color: var(--blue); }
+  .opts label.sel { border-color: var(--blue); background: var(--lightblue); }
+  .opts label.correct { border-color: var(--ok); background: #e8f5e9; }
+  .opts label.wrong { border-color: var(--ng); background: #ffebee; }
+  .exp { display: none; margin-top: 8px; font-size: .92em; border-left: 4px solid var(--blue); padding: 4px 10px; background: #f6f8fc; }
+  .exp.show { display: block; }
+  .exp .mark { font-weight: bold; }
+  .grade-area { padding: 0 20px 20px; }
+  .grade-btn {
+    background: var(--blue); color: #fff; border: none; border-radius: 8px;
+    padding: 10px 26px; font-size: 1em; font-weight: bold; cursor: pointer;
+  }
+  .grade-btn:hover { background: var(--navy); }
+  .result { margin-top: 12px; padding: 12px 16px; border-radius: 8px; display: none; font-size: .97em; }
+  .result.show { display: block; }
+  .result.lv1 { background: #e8f5e9; border: 1.5px solid var(--ok); }
+  .result.lv2 { background: #fff8e1; border: 1.5px solid var(--warn); }
+  .result.lv3 { background: #ffebee; border: 1.5px solid var(--ng); }
+  .result b { font-size: 1.1em; }
+  footer { text-align: center; color: #888; font-size: .85em; margin-top: 40px; }
+  .totalbar {
+    position: sticky; bottom: 0; background: var(--navy); color: #fff;
+    padding: 10px 16px; text-align: center; font-size: .95em; border-radius: 10px 10px 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>有機化学 学習前 基礎確認クイズ</h1>
+  <p>― 芳香族化合物編(全7セクション・各8問)―<br>「有機化学 自学テキスト&amp;基礎ドリル 芳香族編」別冊</p>
+</header>
+
+<div class="howto">
+  <b>使い方:</b>各テーマの学習を始める<b>直前</b>に、該当する8問を解いて「採点する」を押してください(1テーマ5分目安)。<br>
+  <b>判定基準:</b>7〜8問正解 → そのまま本編へ / 5〜6問 → 解説を読んでから本編へ / 4問以下 → 復習分野を確認してから本編へ。<br>
+  <b>注意:</b>芳香族は脂肪族の知識を土台にします。脂肪族編を終えてから取り組んでください。<br>
+  <span style="color:#666">原子量:H=1.0、C=12、N=14、O=16、Na=23、Cl=35.5。標準状態の気体のモル体積は 22.4 L/mol。</span>
+</div>
+
+<nav id="nav"></nav>
+<div id="themes"></div>
+
+<div class="totalbar" id="totalbar">採点済み:0 / 7 セクション</div>
+<footer>有機化学 自学テキスト&amp;基礎ドリル 芳香族編 ― 別冊診断クイズ(HTML版)</footer>
+</div>
+
+<script>
+const OX = ["○", "×"];
+const THEMES = [
+{
+  title: "テーマ1 ベンゼンと芳香族炭化水素 の前に",
+  review: "復習分野:置換反応と付加反応、飽和・不飽和、不飽和度、酸化剤、mol計算",
+  qs: [
+    { q:"置換反応の説明として正しいものを選べ。", o:["分子中の原子や原子団が、別の原子や原子団に置き換わる反応","二重結合が開いて原子が結合する反応","2分子から水がとれて結合する反応","1分子から水がとれる反応"], a:0, exp:"置換=置き換わる、付加=くっついて二重結合が単結合になる。ベンゼンは置換、アルケンは付加が中心。" },
+    { ox:1, q:"アルケンが臭素水の赤褐色を脱色するのは、C=C に臭素が付加するからである。", a:0, exp:"○。ベンゼンはこの反応を起こさないため脱色しない、というのが両者を分ける決定的な違い。" },
+    { q:"不飽和度 U の計算式として正しいものを選べ(C:炭素数、H:水素数、N:窒素数)。", o:["(2C + 2 + N − H)÷2","(2C + 2 + O − H)÷2","(C + H + O)÷2","(2C − 2 − N + H)÷2"], a:0, exp:"酸素原子は数に入れないのがポイント。ハロゲンは水素と同じように引く。" },
+    { q:"ベンゼン C<sub>6</sub>H<sub>6</sub> の不飽和度を選べ。", o:["2","3","4","6"], a:2, exp:"(12+2−6)÷2 = 4。環1個 + C=C 3個 = 4。「不飽和度4ならベンゼン環」が芳香族の合言葉。" },
+    { ox:1, q:"硫酸酸性の過マンガン酸カリウム水溶液は、酸化剤としてはたらく。", a:0, exp:"○。芳香族では側鎖の酸化に使われ、赤紫色が消えることで反応を確認できる。" },
+    { q:"ベンゼン(分子量 78)78 g の物質量を選べ。", o:["0.10 mol","0.78 mol","1.0 mol","7.8 mol"], a:2, exp:"78/78 = 1.0 mol。" },
+    { ox:1, q:"分子式が同じでも構造が異なる化合物どうしを異性体という。", a:0, exp:"○。芳香族ではさらに置換基の位置(o-、m-、p-)の違いが加わる。" },
+    { q:"次のうち、炭素原子間の二重結合をもつ化合物を選べ。", o:["エタン","エチレン","メタノール","シクロヘキサン"], a:1, exp:"エチレン CH<sub>2</sub>=CH<sub>2</sub>。ベンゼンは二重結合をもつように書くが、実際は単結合と二重結合の中間の等価な結合である。" },
+  ]
+},
+{
+  title: "テーマ2 フェノールとその誘導体 の前に",
+  review: "復習分野:酸の強弱と弱酸の遊離、中和と塩、アルコールの −OH、電離",
+  qs: [
+    { q:"弱酸の遊離の説明として正しいものを選べ。", o:["弱酸の塩に、その弱酸より強い酸を加えると弱酸が遊離する","弱酸の塩に、その弱酸より弱い酸を加えると弱酸が遊離する","弱酸に塩基を加えると弱酸が遊離する","弱酸を加熱すると遊離する"], a:0, exp:"「強い酸が弱い酸を追い出す」。フェノールの遊離・分離操作すべての土台になる考え方。" },
+    { q:"酸の強さの順として正しいものを選べ。", o:["炭酸 > 塩酸 > 酢酸","塩酸 > 酢酸 > 炭酸","酢酸 > 炭酸 > 塩酸","炭酸 > 酢酸 > 塩酸"], a:1, exp:"塩酸(強酸)> 酢酸(カルボン酸)> 炭酸。この序列にフェノールが「炭酸より下」で加わる。" },
+    { ox:1, q:"炭酸水素ナトリウム水溶液に炭酸より強い酸を加えると、二酸化炭素が発生する。", a:0, exp:"○。この反応が起こるかどうかで、カルボン酸とフェノールを区別できる。" },
+    { q:"エタノールに単体のナトリウムを加えたときに発生する気体を選べ。", o:["O<sub>2</sub>","H<sub>2</sub>","CO<sub>2</sub>","N<sub>2</sub>"], a:1, exp:"−OH をもつ化合物はナトリウムと反応して水素を発生する。フェノールでも同様。" },
+    { ox:1, q:"エタノールの水溶液は酸性を示す。", a:1, exp:"×。アルコールは中性。同じ −OH でも、ベンゼン環に直接ついたフェノールは弱酸性を示す点が重要な違い。" },
+    { q:"中和反応で生じるものの組み合わせを選べ。", o:["塩と水","水素と水","塩と二酸化炭素","酸と塩基"], a:0, exp:"酸 + 塩基 → 塩 + 水。フェノール + NaOH → ナトリウムフェノキシド + 水 もこの型。" },
+    { q:"プロペン(プロピレン)の示性式を選べ。", o:["CH<sub>3</sub>CH<sub>3</sub>","CH<sub>2</sub>=CHCH<sub>3</sub>","CH≡CCH<sub>3</sub>","CH<sub>3</sub>OH"], a:1, exp:"クメン法でベンゼンに付加させる原料。反応相手の構造を知らないと式が書けない。" },
+    { ox:1, q:"2-プロパノールを酸化するとアセトンが得られる。", a:0, exp:"○。クメン法ではフェノールと同時にアセトンが得られる。ここが結びつく。" },
+  ]
+},
+{
+  title: "テーマ3 芳香族カルボン酸とエステル の前に",
+  review: "復習分野:カルボン酸の性質、エステル化とけん化、脱水、収率をふくむ量計算",
+  qs: [
+    { q:"エステル化の説明として正しいものを選べ。", o:["カルボン酸とアルコールから水がとれて結合する反応","カルボン酸に水が付加する反応","アルコールが酸化される反応","エステルが加水分解される反応"], a:0, exp:"縮合。芳香族でもサリチル酸メチルや安息香酸エチルの合成に使う。" },
+    { ox:1, q:"けん化とは、エステルを塩基の水溶液で加水分解する反応である。", a:0, exp:"○。酸による加水分解は可逆だが、けん化は不可逆に進む。" },
+    { q:"酢酸に炭酸水素ナトリウム水溶液を加えたときに発生する気体を選べ。", o:["H<sub>2</sub>","O<sub>2</sub>","CO<sub>2</sub>","CH<sub>4</sub>"], a:2, exp:"CH<sub>3</sub>COOH + NaHCO<sub>3</sub> → CH<sub>3</sub>COONa + H<sub>2</sub>O + CO<sub>2</sub>。芳香族カルボン酸でも同じ。" },
+    { q:"2つのカルボキシ基が分子内で近い位置にある2価カルボン酸を加熱したときに起こりやすい反応を選べ。", o:["分子内脱水して酸無水物になる","付加重合する","還元されてアルコールになる","水素を発生する"], a:0, exp:"マレイン酸が無水マレイン酸になるのと同じ理屈で、フタル酸は無水フタル酸になる。" },
+    { ox:1, q:"マレイン酸とフマル酸のうち、加熱して酸無水物になるのはフマル酸である。", a:1, exp:"×。シス形のマレイン酸。2つの −COOH が同じ側にあって近いため。芳香族の o-体が脱水するのと同じ考え方。" },
+    { q:"サリチル酸(分子量 138)6.9 g の物質量を選べ。", o:["0.005 mol","0.05 mol","0.5 mol","5 mol"], a:1, exp:"6.9/138 = 0.05 mol。芳香族の収率計算はこのレベルの mol 換算が土台。" },
+    { q:"収率 80% で 0.10 mol の原料から生成物が得られるとき、生成物の物質量を選べ(係数比は 1:1)。", o:["0.008 mol","0.08 mol","0.8 mol","0.125 mol"], a:1, exp:"0.10 × 0.80 = 0.08 mol。" },
+    { ox:1, q:"エチレングリコールは2価のアルコールである。", a:0, exp:"○。テレフタル酸と縮合重合して PET になる。" },
+  ]
+},
+{
+  title: "テーマ4 アニリンと芳香族窒素化合物 の前に",
+  review: "復習分野:酸化還元と還元剤、塩基と塩、アンモニアの性質、官能基の名称",
+  qs: [
+    { q:"「還元する」の説明として正しいものを選べ。", o:["相手に酸素を与える、または相手から水素を奪う","相手から酸素を奪う、または相手に水素を与える","相手を中和する","相手を電離させる"], a:1, exp:"ニトロベンゼン → アニリンは、ニトロ基が還元されてアミノ基になる反応。" },
+    { ox:1, q:"金属のスズや鉄は、塩酸とともに用いると還元剤としてはたらく。", a:0, exp:"○。ニトロベンゼンをアニリンに変える標準的な方法。" },
+    { q:"アンモニア水の液性を選べ。", o:["強酸性","弱酸性","中性","弱塩基性"], a:3, exp:"アンモニアの水素を炭化水素基で置き換えたものがアミン。アニリンも弱塩基性を示す。" },
+    { ox:1, q:"塩基に酸を加えると塩が生じ、水に溶けやすくなることがある。", a:0, exp:"○。アニリン + 塩酸 → アニリン塩酸塩(水に溶ける)。分離操作の要になる。" },
+    { q:"アミノ基の化学式を選べ。", o:["−OH","−COOH","−NH<sub>2</sub>","−NO<sub>2</sub>"], a:2, exp:"−NO<sub>2</sub> はニトロ基。この2つを取り違えないこと。" },
+    { q:"窒素の原子量として正しいものを選べ。", o:["12","14","16","28"], a:1, exp:"N = 14。分子量計算で必要。" },
+    { ox:1, q:"アミド結合は、カルボキシ基とアミノ基から水がとれてできる結合である。", a:0, exp:"○。アニリン + 無水酢酸 → アセトアニリドで生じるのがこの結合。" },
+    { q:"C<sub>6</sub>H<sub>7</sub>N(アニリン)の不飽和度を選べ。", o:["3","4","5","6"], a:1, exp:"(12+2+1−7)÷2 = 4。窒素は足す。不飽和度4なのでベンゼン環のみ、N は −NH<sub>2</sub> と判断できる。" },
+  ]
+},
+{
+  title: "テーマ5 芳香族化合物の構造決定 の前に",
+  review: "復習分野:元素分析、組成式と分子式、不飽和度、検出反応、分子量測定",
+  qs: [
+    { q:"元素分析で、CO<sub>2</sub> の質量から炭素の質量を求める式を選べ。", o:["CO<sub>2</sub> の質量 × 12/44","CO<sub>2</sub> の質量 × 44/12","CO<sub>2</sub> の質量 × 12/22","CO<sub>2</sub> の質量 × 2/44"], a:0, exp:"CO<sub>2</sub>(44)中の C は 12。同様に H は H<sub>2</sub>O × 2.0/18。" },
+    { ox:1, q:"元素分析では、塩化カルシウム管をソーダ石灰管より先に置く。", a:0, exp:"○。ソーダ石灰は CO<sub>2</sub> だけでなく H<sub>2</sub>O も吸収してしまうため、順序を逆にできない。" },
+    { q:"組成式 C<sub>4</sub>H<sub>3</sub>O(式量 67)で分子量 134 の化合物の分子式を選べ。", o:["C<sub>4</sub>H<sub>3</sub>O","C<sub>8</sub>H<sub>6</sub>O<sub>2</sub>","C<sub>12</sub>H<sub>9</sub>O<sub>3</sub>","C<sub>8</sub>H<sub>3</sub>O<sub>2</sub>"], a:1, exp:"134/67 = 2 なので組成式を2倍する。" },
+    { q:"銀鏡反応が陽性のとき、存在が確認できる基を選べ。", o:["カルボキシ基","ホルミル基","ヒドロキシ基","ニトロ基"], a:1, exp:"−CHO。芳香族ではベンズアルデヒドやギ酸エステルで問われる。" },
+    { ox:1, q:"ヨードホルム反応が陽性なら、CH<sub>3</sub>CO− または CH<sub>3</sub>CH(OH)− の構造をもつ。", a:0, exp:"○。芳香族ではアセトフェノンや 1-フェニルエタノールが該当する。" },
+    { q:"分子量を実験的に求める方法として適切でないものを選べ。", o:["凝固点降下","浸透圧","気体の状態方程式","塩化鉄(III)水溶液による呈色"], a:3, exp:"呈色は官能基の検出であって、分子量の測定にはならない。" },
+    { q:"C<sub>8</sub>H<sub>8</sub>O<sub>2</sub> の不飽和度を選べ。", o:["4","5","6","7"], a:1, exp:"(16+2−8)÷2 = 5。ベンゼン環(4)+ C=O 1個 と読めるので、エステルかカルボン酸と当たりが付く。" },
+    { ox:1, q:"ベンゼン環に置換基が2つある化合物には、オルト・メタ・パラの3種類の異性体がある。", a:0, exp:"○。位置の決定が芳香族の構造決定の山場になる。" },
+  ]
+},
+{
+  title: "特訓テーマA 芳香族化合物の分離操作 の前に",
+  review: "復習分野:溶解性と極性、イオンと分子、酸塩基の強弱、密度、抽出操作",
+  qs: [
+    { q:"「似たものどうしがよく溶ける」という原則にしたがうとき、水によく溶けるのはどちらか。", o:["イオンや極性の大きい物質","極性の小さい物質"], a:0, exp:"塩になれば水層、分子のままならエーテル層。この一点が分離操作のすべて。" },
+    { ox:1, q:"ジエチルエーテルは水より密度が小さいので、分液ろうとでは上層になる。", a:0, exp:"○。密度は約 0.71 g/cm<sup>3</sup>。どちらの層をコックから出すかの判断に必要。" },
+    { q:"塩基性の物質を水層に移したいとき、加える試薬として適切なものを選べ。", o:["塩酸","炭酸水素ナトリウム水溶液","水酸化ナトリウム水溶液","エタノール"], a:0, exp:"塩基は酸と反応して塩になる。アニリン → アニリン塩酸塩。" },
+    { q:"炭酸より強い酸だけを塩にして水層へ移したいとき、加える試薬を選べ。", o:["塩酸","炭酸水素ナトリウム水溶液","水酸化ナトリウム水溶液","塩化ナトリウム水溶液"], a:1, exp:"NaHCO<sub>3</sub> は炭酸より強い酸(カルボン酸)とだけ反応する。この「選択性」が分離の鍵。" },
+    { ox:1, q:"水酸化ナトリウムは強塩基なので、弱い酸も強い酸もまとめて塩にしてしまう。", a:0, exp:"○。だからカルボン酸とフェノールを分けたいときは、先に NaHCO<sub>3</sub> を使う必要がある。" },
+    { q:"抽出の説明として正しいものを選べ。", o:["溶媒への溶けやすさの違いを利用して目的物質を分離する操作","沸点の違いを利用して分離する操作","粒子の大きさの違いを利用して分離する操作","溶解度の温度変化を利用して結晶を得る操作"], a:0, exp:"イは蒸留、ウはろ過・透析、エは再結晶。用語の区別が記述で問われる。" },
+    { q:"セロハン膜を利用して、コロイド粒子と小さい分子・イオンを分離する操作の名称を選べ。", o:["ろ過","透析","蒸留","昇華"], a:1, exp:"デンプンやデキストリンは膜を通れず、グルコースは通る。混合物分離の問題で出る。" },
+    { ox:1, q:"中性の物質は、酸を加えても塩基を加えても塩をつくらない。", a:0, exp:"○。だからニトロベンゼンやナフタレンは最後までエーテル層に残る。" },
+  ]
+},
+{
+  title: "特訓テーマB 異性体の書き出し(芳香族) の前に",
+  review: "復習分野:不飽和度、異性体の分類、分子の対称性、置換体の数え方",
+  qs: [
+    { q:"不飽和度の計算で、数に入れない原子を選べ。", o:["炭素","水素","酸素","窒素"], a:2, exp:"酸素は入れない。だから −OH でも −O− でも C=O でも、骨格の不飽和だけを取り出して数えられる。" },
+    { q:"C<sub>8</sub>H<sub>10</sub> の不飽和度を選べ。", o:["3","4","5","6"], a:1, exp:"(16+2−10)÷2 = 4。ベンゼン環のみで、側鎖はすべて飽和と判断できる。" },
+    { ox:1, q:"不飽和度が 3 以下の化合物にも、ベンゼン環が存在しうる。", a:1, exp:"×。ベンゼン環だけで4を使うので、不飽和度3以下ならベンゼン環はもてない。「芳香族ではない」と判断する材料になる。" },
+    { q:"ベンゼン環に同じ置換基が2つついた化合物の異性体の数を選べ。", o:["1種類","2種類","3種類","4種類"], a:2, exp:"オルト・メタ・パラの3種類。" },
+    { ox:1, q:"ベンゼンの一置換体には、置換する位置によって複数の異性体が存在する。", a:1, exp:"×。環の6つの位置はすべて等価なので、一置換体は1種類しかない。" },
+    { q:"不斉炭素原子の説明として正しいものを選べ。", o:["二重結合をもつ炭素原子","互いに異なる4種類の原子・原子団が結合した炭素原子","ベンゼン環の中の炭素原子","水素が結合していない炭素原子"], a:1, exp:"1-フェニルエタノールの −OH がついた炭素が代表例。" },
+    { q:"p-キシレンの環に残っている4個の水素について、正しいものを選べ。", o:["すべて等価である","2種類に分かれる","3種類に分かれる","4種類とも異なる"], a:0, exp:"対称性が高いので一置換体は1種類しかできない。「対称性が高いほど異性体は少ない」の典型例。" },
+    { ox:1, q:"分子式が同じで構造が異なる化合物は、性質も異なることが多い。", a:0, exp:"○。フタル酸とテレフタル酸のように、位置が違うだけで反応性も用途も変わる。" },
+  ]
+},
+];
+
+const KANA = ["ア", "イ", "ウ", "エ"];
+const graded = new Array(THEMES.length).fill(false);
+
+const navEl = document.getElementById("nav");
+const themesEl = document.getElementById("themes");
+
+THEMES.forEach((th, ti) => {
+  const a = document.createElement("a");
+  a.href = "#theme" + ti;
+  a.textContent = th.title.replace(" の前に", "");
+  navEl.appendChild(a);
+
+  const sec = document.createElement("section");
+  sec.className = "theme";
+  sec.id = "theme" + ti;
+  let html = `<h2>${th.title}</h2><div class="review">〔${th.review}〕</div><div class="qbody">`;
+  th.qs.forEach((q, qi) => {
+    const opts = q.ox ? OX : q.o;
+    html += `<div class="q" id="q${ti}_${qi}">
+      <div class="qtext"><span class="qtag">${q.ox ? "〔○×〕" : (q.o.length === 2 ? "〔2択〕" : "〔4択〕")}</span>問${qi + 1} ${q.q}</div>
+      <div class="opts">`;
+    opts.forEach((o, oi) => {
+      const lab = q.ox ? o : KANA[oi] + " " + o;
+      html += `<label data-t="${ti}" data-q="${qi}" data-o="${oi}">
+        <input type="radio" name="q${ti}_${qi}" value="${oi}">${lab}</label>`;
+    });
+    html += `</div><div class="exp" id="exp${ti}_${qi}"></div></div>`;
+  });
+  html += `</div><div class="grade-area">
+    <button class="grade-btn" onclick="grade(${ti})">このセクションを採点する</button>
+    <div class="result" id="result${ti}"></div>
+  </div>`;
+  sec.innerHTML = html;
+  themesEl.appendChild(sec);
+});
+
+document.addEventListener("change", e => {
+  if (e.target.type === "radio") {
+    const labels = e.target.closest(".opts").querySelectorAll("label");
+    labels.forEach(l => l.classList.remove("sel"));
+    e.target.closest("label").classList.add("sel");
+  }
+});
+
+function grade(ti) {
+  const th = THEMES[ti];
+  let score = 0, unanswered = 0;
+  th.qs.forEach((q, qi) => {
+    const sel = document.querySelector(`input[name="q${ti}_${qi}"]:checked`);
+    const labels = document.querySelectorAll(`#q${ti}_${qi} label`);
+    labels.forEach(l => l.classList.remove("correct", "wrong"));
+    const expEl = document.getElementById(`exp${ti}_${qi}`);
+    const correctLabel = labels[q.a];
+    const ansText = q.ox ? OX[q.a] : KANA[q.a];
+    if (!sel) {
+      unanswered++;
+      correctLabel.classList.add("correct");
+      expEl.innerHTML = `<span class="mark" style="color:var(--warn)">未回答</span> 正解:${ansText}。${q.exp}`;
+    } else if (Number(sel.value) === q.a) {
+      score++;
+      correctLabel.classList.add("correct");
+      expEl.innerHTML = `<span class="mark" style="color:var(--ok)">正解!</span> ${q.exp}`;
+    } else {
+      labels[Number(sel.value)].classList.add("wrong");
+      correctLabel.classList.add("correct");
+      expEl.innerHTML = `<span class="mark" style="color:var(--ng)">不正解</span> 正解:${ansText}。${q.exp}`;
+    }
+    expEl.classList.add("show");
+  });
+  const res = document.getElementById("result" + ti);
+  res.classList.remove("lv1", "lv2", "lv3");
+  let msg, lv;
+  if (score >= 7) { lv = "lv1"; msg = "準備OK。そのまま本編のテーマに進みましょう。"; }
+  else if (score >= 5) { lv = "lv2"; msg = "あと少し。間違えた問題の解説を理解してから本編へ進みましょう。"; }
+  else { lv = "lv3"; msg = `復習推奨。〔${th.review.replace("復習分野:", "")}〕を確認してから本編へ進みましょう。`; }
+  res.classList.add(lv, "show");
+  res.innerHTML = `<b>${score} / 8 問正解</b>${unanswered ? `(未回答 ${unanswered} 問)` : ""}<br>${msg}`;
+  graded[ti] = true;
+  document.getElementById("totalbar").textContent =
+    "採点済み:" + graded.filter(Boolean).length + " / 7 セクション";
+  res.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+</script>
+</body>
+</html>
